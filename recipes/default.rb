@@ -35,7 +35,11 @@ end
 
 directory "/etc/ganglia"
 
-template "/etc/ganglia/gmond.conf"
+template "/etc/ganglia/gmond.conf" do
+  source "gmond.conf.erb"
+  variables( :cluster_name => node[:ganglia][:cluster_name] )
+  notifies :restart, "service[ganglia-monitor]"
+end
 
 service "ganglia-monitor" do
   pattern "gmond"

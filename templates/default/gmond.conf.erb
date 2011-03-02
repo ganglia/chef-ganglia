@@ -18,7 +18,7 @@ globals {
  * of a <CLUSTER> tag.  If you do not specify a cluster tag, then all <HOSTS> will 
  * NOT be wrapped inside of a <CLUSTER> tag. */ 
 cluster { 
-  name = "unspecified" 
+  name = "<%= @cluster_name %>"
   owner = "unspecified" 
   latlong = "unspecified" 
   url = "unspecified" 
