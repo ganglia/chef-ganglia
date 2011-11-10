@@ -1,3 +1,5 @@
+directory "/etc/ganglia-webfrontend"
+
 case node[:platform]
 when "ubuntu", "debian"
   package "ganglia-webfrontend"
@@ -19,8 +21,6 @@ when "redhat", "centos", "fedora"
     cwd "/usr/src/ganglia-#{node[:ganglia][:version]}"
   end
 end
-
-directory "/etc/ganglia-webfrontend"
 
 service "apache2" do
   service_name "httpd" if platform?( "redhat", "centos", "fedora" )
