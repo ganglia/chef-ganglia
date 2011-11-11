@@ -1,3 +1,5 @@
+include_recipe "graphite"
+
 template "/usr/local/sbin/ganglia_graphite.rb" do
   source "ganglia_graphite.rb.erb"
 end
