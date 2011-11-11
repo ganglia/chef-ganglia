@@ -50,6 +50,14 @@ tcp_accept_channel {
   port = 8649 
 } 
 
+<% if node[:recipes].include? "ganglia::gmetad" && "ganglia::graphite" -%>
+/* Additional receive channel for graphite integration */
+udp_recv_channel {
+ bind = 127.0.0.1
+ port = 8649
+}
+<% end -%>
+
 /* Each metrics module that is referenced by gmond must be specified and 
    loaded. If the module has been statically linked with gmond, it does not 
    require a load path. However all dynamically loadable modules must include 

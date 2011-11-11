@@ -37,16 +37,6 @@ udp_send_channel {
   ttl = 1 
 } 
 
-udp_recv_channel {
- bind = <%= @host %>
- port = 8649
-}
-
-tcp_accept_channel {
-   bind = <%= @host %>
-   port = 8649
-}
-
 /* You can specify as many udp_recv_channels as you like as well. */ 
 udp_recv_channel { 
   port = 8649 
