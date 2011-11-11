@@ -13,9 +13,11 @@ http://ganglia.sourceforge.net/
 
 = USAGE:
 
-A run list with "recipe[ganglia]" enables monitoring.
-A run list with "recipe[ganglia::web]" enables the web interface.
-A run list with "recipe[ganglia::graphite]" enables graphite graphs.
+A run list with "recipe[ganglia]" enables monitoring.  
+
+A run list with "recipe[ganglia::web]" enables the web interface.  
+
+A run list with "recipe[ganglia::graphite]" enables graphite graphs.  
 
 = CAVEATS: 
 
