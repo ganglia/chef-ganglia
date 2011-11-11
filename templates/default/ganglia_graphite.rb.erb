@@ -1,4 +1,4 @@
-#!/usr/local/bin/ruby
+#!/usr/bin/env ruby
 
 #################################################################################
 # Parse Ganglia XML stream and send metrics to Graphite
@@ -12,14 +12,14 @@ require 'socket'
 # Adjust to the appropriate values
 ganglia_hostname = 'localhost'
 ganglia_port = 8649
-graphite_host = 'localhost'
+graphite_host = '<%= @graphite_host %>'
 graphite_port = 2003
 Debug = false
 
 begin
   # Open up a socket to gmond
   file = TCPSocket.open(ganglia_hostname, ganglia_port)
-  # Open up a socke to graphite
+  # Open up a socket to graphite
   graphite = TCPSocket.open(graphite_host, graphite_port)
   # We need current time stamp in UNIX time 
   now = Time.now.to_i
