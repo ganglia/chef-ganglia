@@ -11,4 +11,4 @@ end
 
 recommends "graphite"
 suggests "iptables"
-
+suggests "xml"
