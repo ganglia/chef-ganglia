@@ -1,5 +1,11 @@
-graphite_host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
-if graphite_host.empty?
+include_recipe "xml"
+package "libxslt-dev"
+gem_package "nokogiri"
+
+if graphite_role = node['graphite']['server_role']
+  graphite_host = search(:node, "role:#{graphite_role} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+end
+if graphite_host.nil? or graphite_host.empty?
   graphite_host = "localhost"
 end
 
@@ -12,3 +18,4 @@ end
 cron "ganglia_graphite" do
   command "/usr/local/sbin/ganglia_graphite.rb"
 end
+

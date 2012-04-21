@@ -1,61 +1,114 @@
-#!/usr/bin/env ruby
+#!/usr/bin/ruby -d
 
 #################################################################################
 # Parse Ganglia XML stream and send metrics to Graphite
 # License: Same as Ganglia
-# Author: Vladimir Vuksan
-# Modified from script written by: Kostas Georgiou
+# Author: Gilles Devaux
+# Modified from script written by: Vladimir Vuksan
+# at https://github.com/ganglia/ganglia_contrib/blob/master/graphite_integration/ganglia_graphite.rb
+#
+# WARNING: Don't be surprised Carbon does not understand COUNTER type. You have to apply a derivative function in the UI.
+#
 #################################################################################
-require "rexml/document"
+require 'rubygems'
+require 'nokogiri'
 require 'socket'
 
 # Adjust to the appropriate values
 ganglia_hostname = 'localhost'
-ganglia_port = 8649
+ganglia_port = 8651
 graphite_host = '<%= @graphite_host %>'
 graphite_port = 2003
-Debug = false
+
+# Open up a socket to gmond
+begin
+  file = TCPSocket.open(ganglia_hostname, ganglia_port)
+rescue
+  abort "Couldn't connect to ganglia: #{$!}"
+end
+
+# Open up a socket to graphite
+begin
+  graphite = TCPSocket.open(graphite_host, graphite_port)
+rescue
+  abort "Couldn't connect to ganglia: #{$!}"
+end
 
 begin
-  # Open up a socket to gmond
-  file = TCPSocket.open(ganglia_hostname, ganglia_port)
-  # Open up a socket to graphite
-  graphite = TCPSocket.open(graphite_host, graphite_port)
-  # We need current time stamp in UNIX time 
+  # We need current time stamp in UNIX time
   now = Time.now.to_i
   # Parse the XML we got from gmond
-  doc = REXML::Document.new file
-  #doc.write( $stdout, 0 )
+  doc = Nokogiri::XML file
+  doc.write( $stderr, 0 ) if $DEBUG
 
-  grid=nil
-  doc.elements.each("GANGLIA_XML/GRID") { |element| 
-   grid=element.attributes["NAME"]
-  }
-  puts "GRID: #{grid}\n" if Debug
+  #only one grid for now?
 
-  cluster=nil
-  doc.elements.each("GANGLIA_XML/GRID/CLUSTER") { |element| 
-   cluster=element.attributes["NAME"] 
-    puts "CLUSTER: #{cluster}\n" if Debug
+  # Set metric prefix to the host name. Graphite uses dots to separate subtrees
+  # therefore we have to change dots in hostnames to _
+  # Do substitution of whitespace after XML parsing to avoid problems with
+  # pre-exiting whitespace in GRID / CLUSTER names in XML.
 
-    doc.elements.each("GANGLIA_XML/GRID[@NAME='#{grid}']/CLUSTER[@NAME='#{cluster}']/HOST") { |host|
-      metric_prefix=host.attributes["NAME"].gsub(".", "_")
-      host.elements.each("METRIC") { |metric|
-        # Set metric prefix to the host name. Graphite uses dots to separate subtrees
-        # therefore we have to change dots in hostnames to _
-        # Do substitution of whitespace after XML parsing to avoid problems with 
-        # pre-exiting whitespace in GRID / CLUSTER names in XML. 
-        grid.gsub!(/\W/, "_")
-        cluster.gsub!(/\W/, "_")
-        if metric.attributes["TYPE"] != "string"                     
-          graphite.puts "#{grid}.#{cluster}.#{metric_prefix}.#{metric.attributes["NAME"]} #{metric.attributes["VAL"]} #{now}\n" if !Debug
-          puts "#{grid}.#{cluster}.#{metric_prefix}.#{metric.attributes["NAME"]} #{metric.attributes["VAL"]} #{now}\n" if Debug
+  grid = doc.at('GANGLIA_XML/GRID')
+  grid_name = grid['NAME'].gsub(/\W/, '_')
+  if $DEBUG
+    $stderr.puts 'GRID: ' + grid['NAME'].to_s
+  end
+
+  grid.css('CLUSTER').each do |cluster|
+    cluster_name = cluster['NAME'].gsub(/\W/, '_')
+    if $DEBUG
+      $stderr.puts 'CLUSTER: ' + cluster_name.to_s
+    end
+
+    cluster.css('HOST').each do |host|
+
+      metric_prefix = host['NAME'].gsub('.', '_')
+      if $DEBUG
+        $stderr.puts 'PREFIX: ' + metric_prefix.to_s
+      end
+
+      host.css('METRIC').each do |metric|
+        metric_name = metric['NAME']
+        if $DEBUG
+          $stderr.puts 'METRIC: ' + metric_name.to_s
         end
-      }
-    }
-  }
+
+        if metric['TYPE'] != 'string'
+
+          group = metric.at('EXTRA_DATA/EXTRA_ELEMENT[@NAME=GROUP]')
+          if group
+            group_name = group['VAL']
+          else
+            #Trick for gmetric < 3.2 (do not have --group option)
+            #Name your metric group_metric_name
+            split = metric_name.split('_')
+            if split.count == 1
+              group_name = 'nogroup'
+            else
+              group_name = split[0]
+              metric_name = split[1..-1].join('_')
+            end
+          end
+
+          if $DEBUG
+            $stderr.puts 'GROUP: ' + group_name.to_s
+          end
+
+          metric_val = metric['VAL']
+          cmd = "#{grid_name}.#{cluster_name}.#{metric_prefix}.#{group_name}.#{metric_name} #{metric_val.to_s} #{now}\n"
+          cmd = grid_name.to_s + '.' + cluster_name.to_s '.' + metric_prefix.to_s + '.' + group_name.to_s + '.' metric_name.to_s + ' ' + metric_val.to_s + ' ' + now.to_s + "\n"
+          if $DEBUG
+            $stderr.puts(cmd)
+          end
+          graphite.puts(cmd)
+        end
+      end
+    end
+
+  end
 
   graphite.close()
   file.close()
 rescue
+  warn $!
 end
