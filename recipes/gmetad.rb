@@ -22,7 +22,7 @@ when true
     source "gmetad.conf.erb"
     variables( :hosts => "localhost",
                :grid_name => node[:ganglia][:grid_name],
-               :cluster_name => node[:ganglia][:cluster_name])
+               :clusters => node[:ganglia][:clusters])
     notifies :restart, "service[gmetad]"
   end
   if node[:recipes].include? "iptables"
