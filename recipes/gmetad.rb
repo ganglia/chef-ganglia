@@ -21,6 +21,7 @@ when true
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :hosts => "localhost",
+               :grid_name => node[:ganglia][:grid_name],
                :cluster_name => node[:ganglia][:cluster_name])
     notifies :restart, "service[gmetad]"
   end
