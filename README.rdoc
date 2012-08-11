@@ -23,7 +23,7 @@ A run list with "recipe[ganglia::graphite]" enables graphite graphs.
 = ATTRIBUTES:
 
 Ganglia is installed on a host in one of the three modes, typically. They are:
-1. Host to be monitored. The run_list and attributes for such a host will be something like:
+* Host to be monitored. The run_list and attributes for such a host will be something like:
 
     {
         "run_list": [
@@ -38,7 +38,7 @@ Ganglia is installed on a host in one of the three modes, typically. They are:
 
 Here the <tt>cluster_name</tt> is the name of the cluster the host belongs to and the <tt>server_addresses</tt> are the addresses or server names to which the current host reports metrics periodically. Typically, it is a single host that collects metrics (described next). Since this hosts only sends out UDP messages to the collecting host, no port needs to be opened.
 
-2. Host that collects metrics for a cluster. The run_list and attributes for such a host would be something like:
+* Host that collects metrics for a cluster. The run_list and attributes for such a host would be something like:
 
     {
         "run_list": [
@@ -53,7 +53,7 @@ Here the <tt>cluster_name</tt> is the name of the cluster the host belongs to an
 
 Again, the <tt>cluster_name</tt> is the name of the cluster for which the current host is collecting metrics. Since the hosts being monitored send UDP messages to this host, this host should open UDP port 8649. Also since the web host (see below) would be polling this host to retrieve metrics for the whole cluster, the host should also open TCP port 8649.
 
-3. Web host. The host that provides the web interface to the user to view the metrics. This host also runs gmetad, the program responsible to retireve cluster level metrics from the collector hosts (described above) and stores it in persistent store. The run_list and attributes for such a host would be something like:
+* Web host. The host that provides the web interface to the user to view the metrics. This host also runs gmetad, the program responsible to retireve cluster level metrics from the collector hosts (described above) and stores it in persistent store. The run_list and attributes for such a host would be something like:
 
     {
         "run_list": [
