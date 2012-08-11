@@ -1,4 +1,4 @@
-Alias /ganglia /usr/share/ganglia-webfrontend
+Alias /ganglia <%= @content_location -%>
 
 <% case node['ganglia']['server_auth_method'] -%>
 <% when "openid" -%>
