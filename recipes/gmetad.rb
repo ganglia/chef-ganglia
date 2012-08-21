@@ -21,7 +21,8 @@ when true
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :hosts => "localhost",
-               :cluster_name => node[:ganglia][:cluster_name])
+               :grid_name => node[:ganglia][:grid_name],
+               :clusters => node[:ganglia][:clusters])
     notifies :restart, "service[gmetad]"
   end
   if node[:recipes].include? "iptables"

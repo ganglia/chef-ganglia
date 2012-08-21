@@ -1,0 +1,21 @@
+Alias /ganglia <%= @content_location -%>
+
+<% case node['ganglia']['server_auth_method'] -%>
+<% when "openid" -%>
+  <% openid = node['ganglia']['openid'] -%>
+  <Location /ganglia>
+    AuthName "Gannglia Server"
+    AuthType OpenID
+    <% if openid['profile_url'] -%>
+      AuthOpenIDSingleIdP <%= openid['profile_url'] %>
+    <% end -%>
+    <% if openid['use_email_as_userid'] -%>
+      AuthOpenIDAXUsername email 
+    <% end -%>
+    <% if openid['email_pattern'] -%>
+      AuthOpenIDAXRequire email http://axschema.org/contact/email <%= openid['email_pattern'] %>
+    <% end -%>
+    require valid-user
+    AuthOpenIDDBLocation <%= node['apache']['mod_auth_openid']['dblocation'] %>
+  </Location>
+<% end -%>
