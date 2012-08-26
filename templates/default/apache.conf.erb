@@ -4,7 +4,7 @@ Alias /ganglia <%= @content_location -%>
 <% when "openid" -%>
   <% openid = node['ganglia']['openid'] -%>
   <Location /ganglia>
-    AuthName "Gannglia Server"
+    AuthName "Ganglia Server"
     AuthType OpenID
     <% if openid['profile_url'] -%>
       AuthOpenIDSingleIdP <%= openid['profile_url'] %>
