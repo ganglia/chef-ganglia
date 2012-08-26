@@ -18,7 +18,9 @@ globals {
  * of a <CLUSTER> tag.  If you do not specify a cluster tag, then all <HOSTS> will 
  * NOT be wrapped inside of a <CLUSTER> tag. */ 
 cluster { 
+/* CUSTER_NAME_BEGIN */
   name = "<%= @cluster_name %>"
+/* CUSTER_NAME_END */
   owner = "unspecified" 
   latlong = "unspecified" 
   url = "unspecified" 
@@ -33,7 +35,9 @@ host {
    used to only support having a single channel */ 
 <% @server_hosts.each do |h| -%>
 udp_send_channel { 
+/* COLLECTOR_HOST_NAME_BEGIN */
   host = <%= h%>
+/* COLLECTOR_HOST_NAME_END */
   port = 8649 
   ttl = 1 
 } 
