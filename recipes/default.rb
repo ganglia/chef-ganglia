@@ -37,14 +37,14 @@ directory "/etc/ganglia"
 
 case node[:ganglia][:unicast]
 when true
-  host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
-  if host.empty? 
-     host = "127.0.0.1"
+  server_hosts = node[:ganglia][:server_addresses] || search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  if server_hosts.empty? 
+     server_hosts = [ "127.0.0.1" ]
   end
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
     variables( :cluster_name => node[:ganglia][:cluster_name],
-               :host => host )
+               :server_hosts => server_hosts )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
