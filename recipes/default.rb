@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-case node[:platform]
+case node['platform']
 when "ubuntu", "debian"
   package "ganglia-monitor"
 when "redhat", "centos", "fedora"
@@ -25,7 +25,7 @@ when "redhat", "centos", "fedora"
 
   execute "copy ganglia-monitor init script" do
     command "cp " +
-      "/usr/src/ganglia-#{node[:ganglia][:version]}/gmond/gmond.init " +
+      "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
       "/etc/init.d/ganglia-monitor"
     not_if "test -f /etc/init.d/ganglia-monitor"
   end
@@ -35,7 +35,7 @@ end
 
 directory "/etc/ganglia"
 
-case node[:ganglia][:unicast]
+case node['ganglia']['unicast']
 when true
   host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
   if host.empty? 
@@ -43,14 +43,14 @@ when true
   end
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
-    variables( :cluster_name => node[:ganglia][:cluster_name],
+    variables( :cluster_name => node['ganglia']['cluster_name'],
                :host => host )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables( :cluster_name => node[:ganglia][:cluster_name] )
+    variables( :cluster_name => node['ganglia']['cluster_name'] )
     notifies :restart, "service[ganglia-monitor]"
   end
 end
