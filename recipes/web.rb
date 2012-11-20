@@ -1,6 +1,6 @@
 directory "/etc/ganglia-webfrontend"
 
-case node[:platform]
+case node['platform']
 when "ubuntu", "debian"
   package "ganglia-webfrontend"
 
@@ -18,7 +18,7 @@ when "redhat", "centos", "fedora"
   execute "copy web directory" do
     command "cp -r web /var/www/html/ganglia"
     creates "/var/www/html/ganglia"
-    cwd "/usr/src/ganglia-#{node[:ganglia][:version]}"
+    cwd "/usr/src/ganglia-#{node['ganglia']['version']}"
   end
 end
 
