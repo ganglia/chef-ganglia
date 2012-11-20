@@ -1,27 +1,30 @@
-= DESCRIPTION:
+Description
+===========
 
 Installs and configures Ganglia.
 
 http://ganglia.sourceforge.net/
 
-= REQUIREMENTS:
+Requirements
+============
 
 * SELinux must be disabled on CentOS
 * iptables must allow access to port 80
 
-= ATTRIBUTES:
+Usage
+=====
 
-= USAGE:
+A run list with `recipe[ganglia]` enables monitoring.
 
-A run list with "recipe[ganglia]" enables monitoring.  
+A run list with `recipe[ganglia::web]` enables the web interface.
 
-A run list with "recipe[ganglia::web]" enables the web interface.  
+A run list with `recipe[ganglia::graphite]` enables graphite graphs.
 
-A run list with "recipe[ganglia::graphite]" enables graphite graphs.
+LWRP
+====
 
-= LWRP:
-
-== gmetric
+gmetric
+-------
 
 Installs a gmetric plugin.
 
@@ -41,9 +44,10 @@ Example:
     cookbooks/memcache/templates/default/memcache.gmetric.erb
     cookbooks/memcache/templates/default/memcache.cron.erb
 
-The content of 'options' will be passed to the templates
+The content of `options` will be passed to the templates
 
-== python
+python
+------
 
 Installs a python plugin.
 
@@ -63,9 +67,10 @@ Example:
     cookbooks/memcache/templates/default/memcache.py.erb
     cookbooks/memcache/templates/default/memcache.pyconf.erb
 
-The content of 'options' will be passed to the templates
+The content of `options` will be passed to the templates
 
-= CAVEATS: 
+Caveats
+=======
 
 This cookbook has been tested on Ubuntu 10.04 and Centos 5.5.
 
