@@ -20,6 +20,12 @@
 case node[:platform]
 when "ubuntu", "debian"
   package "ganglia-monitor"
+  case [node.platform, node.platform_version]
+  when ["ubuntu", "12.04"] 
+    override_hostname = false 
+  when ["debian", "7.0"] 
+    override_hostname = true
+  end
 when "redhat", "centos", "fedora"
   include_recipe "ganglia::source"
 
@@ -35,6 +41,7 @@ end
 
 directory "/etc/ganglia"
 
+
 case node[:ganglia][:unicast]
 when true
   host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
@@ -44,13 +51,15 @@ when true
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
     variables( :cluster_name => node[:ganglia][:cluster_name],
-               :host => host )
+               :host => host,
+               :override => override_hostname )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables( :cluster_name => node[:ganglia][:cluster_name] )
+    variables( :cluster_name => node[:ganglia][:cluster_name],
+               :override => override_hostname )
     notifies :restart, "service[ganglia-monitor]"
   end
 end
