@@ -12,8 +12,11 @@ globals {
   cleanup_threshold = 300 /*secs */ 
   gexec = no             
   send_metadata_interval = 0     
-} 
-
+  <% if @override -%>
+     override_hostname = <%= node['fqdn'] %>
+  <% end -%>
+}
+ 
 /* If a cluster attribute is specified, then all gmond hosts are wrapped inside 
  * of a <CLUSTER> tag.  If you do not specify a cluster tag, then all <HOSTS> will 
  * NOT be wrapped inside of a <CLUSTER> tag. */ 
