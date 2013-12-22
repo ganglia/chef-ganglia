@@ -37,8 +37,11 @@ directory "/etc/ganglia"
 
 case node[:ganglia][:unicast]
 when true
-  host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
-  if host.empty? 
+  host = node['ganglia']['server_host']  # the user can specify the server FQDN
+  unless host
+    search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  end
+  if host.empty?
      host = "127.0.0.1"
   end
   template "/etc/ganglia/gmond.conf" do
