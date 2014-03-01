@@ -11,13 +11,18 @@ http://ganglia.sourceforge.net/
 
 = ATTRIBUTES:
 
+`node[:ganglia][:server_role]` - the name of the role used for the ganglia collector and web server
+`node[:gangila][:unicast]` - True indicates ganglia should use unicast; false indicates it should use multicast
+`node[:ganglia][:clusterport]` - a hash with clustername => portnum pairs for all the clusters in the ganglia grid
+`node[:ganglia][:host_cluster]` - a hash with clustername => 1/0 pairs, where 1 indicates the node should be a member of the cluster
+
 = USAGE:
 
-A run list with "recipe[ganglia]" enables monitoring.  
+Terminology: the ganglia `grid` is made up of multiple `clusters`, each `cluster` has multiple `hosts`. It is common to group hosts by function or some other useful designation into a cluster.
 
-A run list with "recipe[ganglia::web]" enables the web interface.  
+Adding the default recipe to your runlist will install gmond. This recipe should be included on all nodes in your grid to get ganglia to graph metrics for them.
 
-A run list with "recipe[ganglia::graphite]" enables graphite graphs.
+There should be one or more hosts running under the role indicated by `node[:ganglia][:server_role]`; these hosts will serve as the web UI and central collection point for all your metrics. It should run at least the ganglia::gmetad and ganglia::web recipes. It may also run the ganglia::gmond_collector recipe if you have multiple clusters in your grid.  Adding the ganglia::graphite recipe will enable graphite monitoring in addition to the standard ganglia graphing.
 
 = LWRP:
 

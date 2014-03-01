@@ -18,9 +18,11 @@ end
 
 case node[:ganglia][:unicast]
 when true
+  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
-    variables( :hosts => "localhost",
+    variables( :clusters => node['ganglia']['clusterport'].to_hash,
+               :hosts => gmond_collectors,
                :cluster_name => node[:ganglia][:cluster_name])
     notifies :restart, "service[gmetad]"
   end
@@ -31,7 +33,8 @@ when false
   ips = search(:node, "*:*").map {|node| node.ipaddress}
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
-    variables( :hosts => ips.join(" "),
+    variables( :clusters => node['ganglia']['clusterport'].to_hash,
+               :hosts => ips.join(" "),
                :cluster_name => node[:ganglia][:cluster_name])
     notifies :restart, "service[gmetad]"
   end
