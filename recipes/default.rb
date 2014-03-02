@@ -35,22 +35,36 @@ end
 
 directory "/etc/ganglia"
 
+# figure out which cluster(s) we should join
+# this section assumes you can send to multiple ports.
+ports=[]
+node['ganglia']['host_cluster'].each do |k,v|
+  if (v == 1 and node['ganglia']['clusterport'].has_key?(k))
+    ports.push(node['ganglia']['clusterport'][k])
+  end
+end
+if ports.empty?
+  ports.push(node['ganglia']['clusterport']['default'])
+end
+
 case node[:ganglia][:unicast]
 when true
-  host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
-  if host.empty? 
-     host = "127.0.0.1"
+  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  if gmond_collectors.empty? 
+     gmond_collectors = "127.0.0.1"
   end
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
     variables( :cluster_name => node[:ganglia][:cluster_name],
-               :host => host )
+               :gmond_collectors => gmond_collectors,
+               :ports => ports )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables( :cluster_name => node[:ganglia][:cluster_name] )
+    variables( :cluster_name => node[:ganglia][:cluster_name],
+               :ports => ports )
     notifies :restart, "service[ganglia-monitor]"
   end
 end
