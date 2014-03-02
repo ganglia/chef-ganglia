@@ -12,3 +12,4 @@ end
 recommends "graphite"
 suggests "iptables"
 
+depends "runit"

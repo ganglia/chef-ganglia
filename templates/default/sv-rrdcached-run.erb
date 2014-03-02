@@ -1,0 +1,7 @@
+#!/bin/sh
+exec 2>&1
+exec chpst -u <%= @options[:user] %> /usr/bin/rrdcached -w 300 -z 240 -F -g -p /tmp/rrdcached.pid \
+    -m 664 -l unix:<%= @options[:main_socket] %> \
+    -m 777 -P FLUSH,STATS,HELP -l unix:<%= @options[:limited_socket] %> \
+    -b <%= @options[:ganglia_rrds] %> -B
+
