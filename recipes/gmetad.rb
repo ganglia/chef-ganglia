@@ -45,7 +45,7 @@ when true
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => gmond_collectors,
-               :cluster_name => node[:ganglia][:cluster_name])
+               :grid_name => node[:ganglia][:grid_name])
     notifies :restart, "service[gmetad]"
   end
   if node[:recipes].include? "iptables"
@@ -57,7 +57,7 @@ when false
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => ips.join(" "),
-               :cluster_name => node[:ganglia][:cluster_name])
+               :grid_name => node[:ganglia][:grid_name])
     notifies :restart, "service[gmetad]"
   end
 end
