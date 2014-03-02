@@ -5,6 +5,9 @@ default[:ganglia][:cluster_name] = "default"
 default[:ganglia][:unicast] = false
 default[:ganglia][:server_role] = "ganglia"
 default[:ganglia][:user] = "nobody"
+default[:ganglia][:rrd_rootdir] = "/var/lib/ganglia/rrds"
+default[:ganglia][:gmetad][:xml_port] = 8651
+default[:ganglia][:gmetad][:interactive_port] = 8652
 
 # port assignments for each cluster
 # you should overwrite this with your own cluster list in a wrapper cookbook.
@@ -31,9 +34,15 @@ default[:ganglia][:rrdcached][:main_socket] = "/tmp/rrdcached.sock"
 # use this socket for the web ui
 default[:ganglia][:rrdcached][:limited_socket] = "/tmp/rrdacached_limited.sock"
 # where do the ganglia rrds live
-default[:ganglia][:rrdcached][:ganglia_rrds] = "/var/lib/ganglia/rrds"
+default[:ganglia][:rrdcached][:ganglia_rrds] = node[:ganglia][:rrd_rootdir]
 
 # attributes for web configuration
 # whether to use authentication: options 'disabled', 'readonly', and 'enabled'
 default[:ganglia][:web][:auth_system] = 'disabled'
 
+# run two gmetads on the web server; one handles writing rrds and the other
+# serves interactive queries from the web ui. Set this to true if you have >300k metrics
+default[:ganglia][:enable_two_gmetads] = false
+default[:ganglia][:two_gmetads][:xml_port] = 8661
+default[:ganglia][:two_gmetads][:interactive_port] = 8662
+default[:ganglia][:two_gmetads][:empty_rrd_rootdir] = "/var/lib/ganglia/empty-rrds-dir"

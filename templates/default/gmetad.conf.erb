@@ -98,13 +98,13 @@ gridname "<%= @cluster_name %>"
 #-------------------------------------------------------------------------------
 # The port gmetad will answer requests for XML
 # default: 8651
-# xml_port 8651
+xml_port <%= @xml_port %>
 #
 #-------------------------------------------------------------------------------
 # The port gmetad will answer queries for XML. This facility allows
 # simple subtree and summation views of the XML tree.
 # default: 8652
-# interactive_port 8652
+interactive_port <%= @interactive_port %>
 #
 #-------------------------------------------------------------------------------
 # The number of threads answering XML requests
@@ -114,4 +114,9 @@ gridname "<%= @cluster_name %>"
 #-------------------------------------------------------------------------------
 # Where gmetad stores its round-robin databases
 # default: "/var/lib/ganglia/rrds"
-# rrd_rootdir "/some/other/place"
+rrd_rootdir "<%= @rrd_rootdir %>"
+#
+#-------------------------------------------------------------------------------
+# Controls whether gmetad will write rrds to disk
+# default: on
+write_rrds <%= @write_rrds %>
