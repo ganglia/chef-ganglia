@@ -49,6 +49,25 @@ Example:
 
 The content of 'options' will be passed to the templates
 
+== logtailer
+
+The logtailer LWRP makes it easy to configure the ganglia-logtailer package with a custom module to consume a log file and report statistics to ganglia. If you are using one of the modules that came with ganglia-logtailer (look in /usr/share/ganglia-logtailer), don't use the LWRP - instead create a crontab entry in your recipe.
+
+In order to use the logtailer from cron or the LWRP, you must
+* build and install the ganglia-logtailer package from https://github.com/ganglia/ganglia_contrib/tree/master/ganglia-logtailer
+* include the ganglia::logtailer recipe on the node that will use the LWRP
+
+When using the LWRP, you must include the python ganglia-logtailer module you want to use in a directory called 'ganglia' in the calling cookbook's templates dir.
+
+For example, if my cookbook configures and installs nginx and I wish to use the ganglia-logtailer with a custom nginx module I would:
+* put the following LWRP invocation in the nginx recipe:
+ include_recipe "ganglia::logtailer"
+ ganglia_logtailer "NginxLogtailer" do
+   action :enable
+   log_file "/var/log/nginx/access.log"
+ end
+* place the python module in mynginx/templates/ganglia/NginxLogtailer.py.erb
+
 == python
 
 Installs a python plugin.
