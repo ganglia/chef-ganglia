@@ -12,8 +12,30 @@ when "redhat", "centos", "fedora"
 end
 
 directory "/var/lib/ganglia/rrds" do
-  owner "nobody"
+  owner node[:ganglia][:user]
   recursive true
+end
+
+# if we should use rrdcached, set it up here.
+if node[:ganglia][:enable_rrdcached] == true
+  package "rrdcached" do
+    action :install
+  end
+  include_recipe "runit"
+  runit_service "rrdcached" do
+    template_name "rrdcached"
+    options({
+      :user => node[:ganglia][:rrdcached][:user],
+      :main_socket => node[:ganglia][:rrdcached][:main_socket],
+      :limited_socket => node[:ganglia][:rrdcached][:limited_socket],
+      :ganglia_rrds => node[:ganglia][:rrdcached][:ganglia_rrds]
+      }
+    )
+  end
+  # install socat to make it easy to talk to rrdcached for diagnostics.
+  package "socat" do      
+    action :install
+  end
 end
 
 case node[:ganglia][:unicast]
@@ -35,6 +57,14 @@ when false
                :cluster_name => node[:ganglia][:cluster_name])
     notifies :restart, "service[gmetad]"
   end
+end
+
+# drop in our own gmetad init script to enable rrdcached if appropriate
+template "/etc/init.d/gmetad" do
+  source "gmetad-startscript.erb"
+  mode "0755"
+  variables( :gmetad_name => "gmetad" )
+  notifies :restart, "service[gmetad]"
 end
 
 service "gmetad" do

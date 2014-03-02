@@ -11,6 +11,8 @@ http://ganglia.sourceforge.net/
 
 = ATTRIBUTES:
 
+`node[:ganglia][:enable_rrdcached]` - True enables rrdcached on the gmetad server.
+
 = USAGE:
 
 A run list with "recipe[ganglia]" enables monitoring.  
