@@ -1,8 +1,11 @@
 = DESCRIPTION:
 
-Installs and configures Ganglia.
+Installs and configures Ganglia.  
 
-http://ganglia.sourceforge.net/
+Originally written by Heavy Water (http://hw-ops.com/), Now maintained by the Ganglia team.
+
+* http://ganglia.info/
+* http://github.com/ganglia/chef-ganglia
 
 = REQUIREMENTS:
 
