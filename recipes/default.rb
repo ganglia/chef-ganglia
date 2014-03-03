@@ -60,7 +60,9 @@ when true
     source "gmond_unicast.conf.erb"
     variables( :cluster_name => clusternames[0],
                :gmond_collectors => gmond_collectors,
-               :ports => ports )
+               :ports => ports,
+               :spoof_hostname => node[:ganglia][:spoof_hostname],
+               :hostname => node.hostname )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false

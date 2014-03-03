@@ -8,6 +8,7 @@ default[:ganglia][:user] = "nobody"
 default[:ganglia][:rrd_rootdir] = "/var/lib/ganglia/rrds"
 default[:ganglia][:gmetad][:xml_port] = 8651
 default[:ganglia][:gmetad][:interactive_port] = 8652
+default[:gagnlia][:spoof_hostname] = false
 
 # port assignments for each cluster
 # you should overwrite this with your own cluster list in a wrapper cookbook.
