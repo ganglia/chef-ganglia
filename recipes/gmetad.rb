@@ -55,7 +55,8 @@ when true
                :xml_port => node[:ganglia][:gmetad][:xml_port],
                :interactive_port => node[:ganglia][:gmetad][:interactive_port],
                :rrd_rootdir => node[:ganglia][:rrd_rootdir],
-               :write_rrds => "on")
+               :write_rrds => "on",
+               :grid_name => node[:ganglia][:grid_name])
     notifies :restart, "service[gmetad]"
   end
   if node[:ganglia][:enable_two_gmetads]
@@ -80,7 +81,7 @@ when false
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => ips.join(" "),
-               :cluster_name => node[:ganglia][:cluster_name])
+               :grid_name => node[:ganglia][:grid_name])
     notifies :restart, "service[gmetad]"
   end
 end
