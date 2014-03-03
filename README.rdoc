@@ -11,6 +11,7 @@ http://ganglia.sourceforge.net/
 
 = ATTRIBUTES:
 
+* `node[:ganglia][:grid_name] - the name to use for the ganglia grid - displayed in the web UI
 * `node[:ganglia][:server_role]` - the name of the role used for the ganglia collector and web server
 * `node[:gangila][:unicast]` - True indicates ganglia should use unicast; false indicates it should use multicast
 * `node[:ganglia][:clusterport]` - a hash with clustername => portnum pairs for all the clusters in the ganglia grid
