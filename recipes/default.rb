@@ -52,10 +52,17 @@ end
 
 case node[:ganglia][:unicast]
 when true
-  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  # fill in the gmond collectors by attribute if it exists, search if you find anything, or localhost.
+  gmond_collectors = []
+  if node['ganglia']['server_host']
+    gmond_collectors = [node['ganglia']['server_host']]
+  elsif gmond_collectors.empty?
+    gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  end rescue NoMethodError
   if gmond_collectors.empty? 
      gmond_collectors = "127.0.0.1"
   end
+
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
     variables( :cluster_name => clusternames[0],

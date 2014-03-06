@@ -10,6 +10,9 @@ default[:ganglia][:gmetad][:xml_port] = 8651
 default[:ganglia][:gmetad][:interactive_port] = 8652
 default[:gagnlia][:spoof_hostname] = false
 
+# Uncomment this to override the search for server_role and just specify the host instead
+# default[:ganglia][:server_host] = 'ganglia.example.com'
+
 # port assignments for each cluster
 # you should overwrite this with your own cluster list in a wrapper cookbook.
 # Notes:
