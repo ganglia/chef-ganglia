@@ -8,7 +8,7 @@ default[:ganglia][:user] = "nobody"
 default[:ganglia][:rrd_rootdir] = "/var/lib/ganglia/rrds"
 default[:ganglia][:gmetad][:xml_port] = 8651
 default[:ganglia][:gmetad][:interactive_port] = 8652
-default[:gagnlia][:spoof_hostname] = false
+default[:ganglia][:spoof_hostname] = false
 
 # Uncomment this to override the search for server_role and just specify the host instead
 # default[:ganglia][:server_host] = 'ganglia.example.com'
