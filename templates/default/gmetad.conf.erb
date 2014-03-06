@@ -36,7 +36,10 @@
 # data_source "my grid" 50 1.3.4.7:8655 grid.org:8651 grid-backup.org:8651
 # data_source "another source" 1.3.4.7:8655  1.3.4.8
 
-data_source "<%= @cluster_name %>" <%= @hosts %>
+<%# the shuffle in @hosts.map balances load across the gmond collectors. %>
+<% @clusters.each do |cluster,port| %>
+data_source "<%= cluster %>" <%= @hosts.map {|host| "#{host}:#{port}"}.shuffle.join(' ') %>
+<% end %>
 
 #
 # Round-Robin Archives
@@ -60,7 +63,7 @@ data_source "<%= @cluster_name %>" <%= @hosts %>
 # The name of this Grid. All the data sources above will be wrapped in a GRID
 # tag with this name.
 # default: unspecified
-gridname "<%= @cluster_name %>"
+gridname "<%= @grid_name %>"
 #
 #-------------------------------------------------------------------------------
 # The authority URL for this grid. Used by other gmetads to locate graphs
@@ -95,13 +98,13 @@ gridname "<%= @cluster_name %>"
 #-------------------------------------------------------------------------------
 # The port gmetad will answer requests for XML
 # default: 8651
-# xml_port 8651
+xml_port <%= @xml_port %>
 #
 #-------------------------------------------------------------------------------
 # The port gmetad will answer queries for XML. This facility allows
 # simple subtree and summation views of the XML tree.
 # default: 8652
-# interactive_port 8652
+interactive_port <%= @interactive_port %>
 #
 #-------------------------------------------------------------------------------
 # The number of threads answering XML requests
@@ -111,4 +114,9 @@ gridname "<%= @cluster_name %>"
 #-------------------------------------------------------------------------------
 # Where gmetad stores its round-robin databases
 # default: "/var/lib/ganglia/rrds"
-# rrd_rootdir "/some/other/place"
+rrd_rootdir "<%= @rrd_rootdir %>"
+#
+#-------------------------------------------------------------------------------
+# Controls whether gmetad will write rrds to disk
+# default: on
+write_rrds <%= @write_rrds %>
