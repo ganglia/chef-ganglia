@@ -25,7 +25,7 @@ end
 xml_port = if node[:ganglia][:enable_two_gmetads] then
                 node[:ganglia][:two_gmetads][:xml_port]
            else
-                node[:ganglia][:gmetad][:xml_port])
+                node[:ganglia][:gmetad][:xml_port]
            end
 template "/etc/ganglia-webfrontend/conf.php" do
   source "webconf.php.erb"
