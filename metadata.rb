@@ -1,3 +1,5 @@
+name             "ganglia"
+
 maintainer       "Ganglia Team"
 maintainer_email "ganglia-developers@lists.sourceforge.net"
 license          "Apache 2.0"
