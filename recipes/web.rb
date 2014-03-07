@@ -1,6 +1,6 @@
 directory "/etc/ganglia-webfrontend"
 
-case node[:platform]
+case node['platform']
 when "ubuntu", "debian"
   package "ganglia-webfrontend"
 
@@ -18,14 +18,14 @@ when "redhat", "centos", "fedora"
   execute "copy web directory" do
     command "cp -r web /var/www/html/ganglia"
     creates "/var/www/html/ganglia"
-    cwd "/usr/src/ganglia-#{node[:ganglia][:version]}"
+    cwd "/usr/src/ganglia-#{node['ganglia']['version']}"
   end
 end
 
-xml_port = if node[:ganglia][:enable_two_gmetads] then
-                node[:ganglia][:two_gmetads][:xml_port]
+xml_port = if node['ganglia']['enable_two_gmetads'] then
+                node['ganglia']['two_gmetads']['xml_port']
            else
-                node[:ganglia][:gmetad][:xml_port]
+                node['ganglia']['gmetad']['xml_port']
            end
 template "/etc/ganglia-webfrontend/conf.php" do
   source "webconf.php.erb"
