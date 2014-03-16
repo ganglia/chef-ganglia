@@ -32,6 +32,8 @@ Adding the default recipe to your runlist will install gmond. This recipe should
 
 There should be one or more hosts running under the role indicated by `node[:ganglia][:server_role]`; these hosts will serve as the web UI and central collection point for all your metrics. It should run at least the ganglia::gmetad and ganglia::web recipes. It may also run the ganglia::gmond_collector recipe if you have multiple clusters in your grid.  Adding the ganglia::graphite recipe will enable graphite monitoring in addition to the standard ganglia graphing.
 
+The aggregator recipe will install aggregator.py and run it every minute from cron. The aggregation recipe should be run on the same node as runs your gmond collectors. It will look for attributes set in other recipes indicating what metrics to aggregate and how to aggregate them. It will connect ot each of the collector gmond processes, get all the relevant metrics, aggregate them, and re-submit them to the same gmond under the pseudo-host "all_<clustername>".
+
 = LWRP:
 
 == gmetric
