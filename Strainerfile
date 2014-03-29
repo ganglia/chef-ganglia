@@ -1,0 +1,4 @@
+# Strainerfile
+knife test: bundle exec knife cookbook test $COOKBOOK
+foodcritic: bundle exec foodcritic $SANDBOX/$COOKBOOK
+kitchen:    bundle exec kitchen test
