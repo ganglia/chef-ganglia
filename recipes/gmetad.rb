@@ -47,6 +47,9 @@ end
 case node[:ganglia][:unicast]
 when true
   gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  if gmond_collectors.empty?
+    gmond_collectors = ['127.0.0.1']
+  end
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
