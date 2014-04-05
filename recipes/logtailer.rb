@@ -10,4 +10,5 @@
 # its own ganglia client.
 include_recipe "ganglia::default"
 
+# requires at least version 1.8: http://github.com/ganglia/ganglia_contrib/tree/master/ganglia-logtailer
 package "ganglia-logtailer"

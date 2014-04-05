@@ -24,7 +24,7 @@ action :enable do
       metric_prefix_arg = "--metric_prefix #{new_resource.metric_prefix}"
     end
     #build the command
-    command "/usr/sbin/ganglia-logtailer #{metric_prefix_arg} --classname #{new_resource.module_name} --log_file #{new_resource.log_file} --mode cron"
+    command "/usr/sbin/ganglia-logtailer #{metric_prefix_arg} --classname #{new_resource.module_name} --log_file #{new_resource.log_file} --missing_as_zero --mode cron"
   end
 end
 
