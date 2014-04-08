@@ -169,17 +169,22 @@ class GangliaAggregator:
                     #use the existing value for units
                     pass
 
+                # sanitize metric name
+                metric_name = re.sub("[^A-Za-z0-9._-]", "_", metric_name)
+
                 values = {
-                    'config' : config_file,
-                    'value' : total,
-                    'name' : metric_name,
-                    'units' : units,
+                    'config' : str(config_file),
+                    'value' : str(total),
+                    'name' : str(metric_name),
+                    'units' : str(units),
                     'type' : 'float',
                     'spoof' : 'all_%s:all_%s' %(cluster, cluster)
                 }
-                command = "gmetric -c %(config)s -n '%(name)s' -v %(value)f " % values
-                command += "-u %(units)s -S %(spoof)s -t %(type)s" % values
-                os.system(command)
+                command = ["gmetric", "-c", values['config'],
+                    "-n", values['name'], "-v", values['value'],
+                    "-u", values['units'], "-S", values['spoof'], "-t", values['type']
+                    ]
+                subprocess.call(command)
 
     def process_all(self):
         for key in self._tracked_metrics.keys():
