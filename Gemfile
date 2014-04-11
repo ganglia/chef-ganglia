@@ -7,6 +7,7 @@ gem 'foodcritic'
 gem 'minitest', '~> 3.0.0'
 gem 'chefspec', '~> 3.0'
 
+gem 'libyml', '~> 0.1.6'
 
 group :kitchen  do
   gem 'test-kitchen'
