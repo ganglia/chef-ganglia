@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'chef'
+gem 'berkshelf'
 gem 'thor', '~> 0.18.0'
 gem 'strainer', '~> 3.3.0'
 gem 'foodcritic'
