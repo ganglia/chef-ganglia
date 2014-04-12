@@ -4,5 +4,4 @@ gemfile:
 rvm:
   - 1.9.3
 script:
-  - bundle exec gem install psych -- --enable-bundled-libyaml
   - bundle exec strainer test
