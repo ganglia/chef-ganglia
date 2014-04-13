@@ -39,6 +39,10 @@ default[:ganglia][:rrdcached][:main_socket] = "/tmp/rrdcached.sock"
 default[:ganglia][:rrdcached][:limited_socket] = "/tmp/rrdacached_limited.sock"
 # where do the ganglia rrds live
 default[:ganglia][:rrdcached][:ganglia_rrds] = node[:ganglia][:rrd_rootdir]
+# how often to write rrds in secs
+default[:ganglia][:rrdcached][:timeout] = 300 # rrdcached's default
+# random splay for individual rrd writes
+default[:ganglia][:rrdcached][:delay] = 240 # previous hard-coded value
 
 # attributes for web configuration
 # whether to use authentication: options 'disabled', 'readonly', and 'enabled'

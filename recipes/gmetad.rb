@@ -34,7 +34,9 @@ if node[:ganglia][:enable_rrdcached] == true
       :user => node[:ganglia][:rrdcached][:user],
       :main_socket => node[:ganglia][:rrdcached][:main_socket],
       :limited_socket => node[:ganglia][:rrdcached][:limited_socket],
-      :ganglia_rrds => node[:ganglia][:rrdcached][:ganglia_rrds]
+      :ganglia_rrds => node[:ganglia][:rrdcached][:ganglia_rrds],
+      :timeout => node[:ganglia][:rrdcached][:timeout],
+      :delay => node[:ganglia][:rrdcached][:delay],
       }
     )
   end
