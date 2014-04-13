@@ -105,3 +105,18 @@ This cookbook has been tested on Ubuntu 10.04 and Centos 5.5.
 
 Search seems to takes a moment or two to index.
 You may need to converge again to see recently added nodes.
+
+= Testing
+
+This cookbook is set up to test using
+* knife test
+* foodcritic
+* test-kitchen
+** chefspec
+** minitest
+
+To launch all the tests, run:
+* bundle install
+* bundle exec strainer test
+
+For individual tests, examine the Strainerfile for the relevant commands to run.

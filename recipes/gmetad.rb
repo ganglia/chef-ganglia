@@ -83,7 +83,7 @@ when false
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
-               :hosts => ips.join(" "),
+               :hosts => ips,
                :grid_name => node[:ganglia][:grid_name])
     notifies :restart, "service[gmetad]"
   end
