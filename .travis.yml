@@ -4,5 +4,7 @@ gemfile:
   - Gemfile
 rvm:
   - 1.9.3
+before_script:
+  - bundle exec berks install
 script:
   - bundle exec strainer test
