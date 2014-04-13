@@ -1,6 +1,6 @@
 = DESCRIPTION:
 
-Installs and configures Ganglia.  
+Installs and configures Ganglia.
 
 Originally written by Heavy Water (http://hw-ops.com/), Now maintained by the Ganglia team.
 
@@ -22,7 +22,7 @@ Originally written by Heavy Water (http://hw-ops.com/), Now maintained by the Ga
 * `node[:ganglia][:host_cluster]` - a hash with clustername => 1/0 pairs, where 1 indicates the node should be a member of the cluster
 * `node[:ganglia][:enable_rrdcached]` - Default true. Enables rrdcached on the gmetad server.
 * `node[:ganglia][:enable_two_gmetads]` - Default false. Setting to true runs two copies of gmetad on the server; one writes out RRDs and the web UI talks to the other. This improves web UI performance for large installations.
-* `node[:ganglia][:spoof_hostname] - Default false. Setting to true configures gmond to force the use of its hostname as the node name rather than the default ganglia behavior of using reverse DNS. Useful for cloud environments such as EC2. 
+* `node[:ganglia][:spoof_hostname] - Default false. Setting to true configures gmond to force the use of its hostname as the node name rather than the default ganglia behavior of using reverse DNS. Useful for cloud environments such as EC2.
 
 = USAGE:
 
@@ -99,7 +99,7 @@ Example:
 
 The content of 'options' will be passed to the templates
 
-= CAVEATS: 
+= CAVEATS:
 
 This cookbook has been tested on Ubuntu 10.04 and Centos 5.5.
 

@@ -5,29 +5,29 @@
 #
 #-------------------------------------------------------------------------------
 # Setting the debug_level to 1 will keep daemon in the forground and
-# show only error messages. Setting this value higher than 1 will make 
+# show only error messages. Setting this value higher than 1 will make
 # gmetad output debugging information and stay in the foreground.
 # default: 0
 # debug_level 10
 #
 #-------------------------------------------------------------------------------
-# What to monitor. The most important section of this file. 
+# What to monitor. The most important section of this file.
 #
 # The data_source tag specifies either a cluster or a grid to
 # monitor. If we detect the source is a cluster, we will maintain a complete
-# set of RRD databases for it, which can be used to create historical 
+# set of RRD databases for it, which can be used to create historical
 # graphs of the metrics. If the source is a grid (it comes from another gmetad),
 # we will only maintain summary RRDs for it.
 #
-# Format: 
+# Format:
 # data_source "my cluster" [polling interval] address1:port addreses2:port ...
-# 
-# The keyword 'data_source' must immediately be followed by a unique
-# string which identifies the source, then an optional polling interval in 
-# seconds. The source will be polled at this interval on average. 
-# If the polling interval is omitted, 15sec is asssumed. 
 #
-# A list of machines which service the data source follows, in the 
+# The keyword 'data_source' must immediately be followed by a unique
+# string which identifies the source, then an optional polling interval in
+# seconds. The source will be polled at this interval on average.
+# If the polling interval is omitted, 15sec is asssumed.
+#
+# A list of machines which service the data source follows, in the
 # format ip:port, or name:port. If a port is not specified then 8649
 # (the default gmond port) is assumed.
 # default: There is no default value
@@ -75,7 +75,7 @@ gridname "<%= @grid_name %>"
 #
 #-------------------------------------------------------------------------------
 # List of machines this gmetad will share XML with. Localhost
-# is always trusted. 
+# is always trusted.
 # default: There is no default value
 # trusted_hosts 127.0.0.1 169.229.50.165 my.gmetad.org
 #

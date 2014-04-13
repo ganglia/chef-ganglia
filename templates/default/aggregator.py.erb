@@ -153,7 +153,7 @@ class GangliaAggregator:
                 try:
                     values = self._accumulated_values[expanded_name]
                 except KeyError:
-                    values = [0] 
+                    values = [0]
                 total = sum(values)
                 if aggregator == GangliaAggregator.AVG and len(values) > 0:
                     total = total / len(values)
