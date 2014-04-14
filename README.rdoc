@@ -121,5 +121,5 @@ To launch all the tests, run:
 
 For individual tests, examine the Strainerfile for the relevant commands to run.
 
-[![Build Status](https://secure.travis-ci.org/ganglia/chef-ganglia.png)](http://travis-ci.org/ganglia/chef-ganglia)
+{rdoc-image:https://secure.travis-ci.org/ganglia/chef-ganglia.png}[http://travis-ci.org/ganglia/chef-ganglia]
 
