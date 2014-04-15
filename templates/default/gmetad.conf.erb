@@ -84,6 +84,9 @@ gridname "<%= @grid_name %>"
 # default: There is no default value
 # trusted_hosts 127.0.0.1 169.229.50.165 my.gmetad.org
 #
+<% unless @trusted_hosts.nil? %>
+trusted_hosts <%= @trusted_hosts.map {|host| "#{host}"}.join(' ') %>
+<% end %>
 #-------------------------------------------------------------------------------
 # If you want any host which connects to the gmetad XML to receive
 # data, then set this value to "on"
