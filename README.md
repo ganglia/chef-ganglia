@@ -1,4 +1,7 @@
-= DESCRIPTION:
+[![Build Status](https://secure.travis-ci.org/ganglia/chef-ganglia.png)](http://travis-ci.org/ganglia/chef-ganglia)
+
+Description
+===========
 
 Installs and configures Ganglia.
 
@@ -7,12 +10,14 @@ Originally written by Heavy Water (http://hw-ops.com/), Now maintained by the Ga
 * http://ganglia.info/
 * http://github.com/ganglia/chef-ganglia
 
-= REQUIREMENTS:
+Requirements
+============
 
 * SELinux must be disabled on CentOS
 * iptables must allow access to port 80
 
-= ATTRIBUTES:
+Attributes
+==========
 
 * `node[:ganglia][:grid_name] - the name to use for the ganglia grid - displayed in the web UI
 * `node[:ganglia][:server_role]` - the name of the role used for the ganglia collector and web server
@@ -24,7 +29,8 @@ Originally written by Heavy Water (http://hw-ops.com/), Now maintained by the Ga
 * `node[:ganglia][:enable_two_gmetads]` - Default false. Setting to true runs two copies of gmetad on the server; one writes out RRDs and the web UI talks to the other. This improves web UI performance for large installations.
 * `node[:ganglia][:spoof_hostname] - Default false. Setting to true configures gmond to force the use of its hostname as the node name rather than the default ganglia behavior of using reverse DNS. Useful for cloud environments such as EC2.
 
-= USAGE:
+Usage
+=====
 
 Terminology: the ganglia `grid` is made up of multiple `clusters`, each `cluster` has multiple `hosts`. It is common to group hosts by function or some other useful designation into a cluster.
 
@@ -34,9 +40,11 @@ There should be one or more hosts running under the role indicated by `node[:gan
 
 The aggregator recipe will install aggregator.py and run it every minute from cron. The aggregation recipe should be run on the same node as runs your gmond collectors. It will look for attributes set in other recipes indicating what metrics to aggregate and how to aggregate them. It will connect ot each of the collector gmond processes, get all the relevant metrics, aggregate them, and re-submit them to the same gmond under the pseudo-host "all_<clustername>".
 
-= LWRP:
+LWRP
+====
 
-== gmetric
+gmetric
+-------
 
 Installs a gmetric plugin.
 
@@ -58,7 +66,8 @@ Example:
 
 The content of 'options' will be passed to the templates
 
-== logtailer
+logtailer
+---------
 
 The logtailer LWRP makes it easy to configure the ganglia-logtailer package with a custom module to consume a log file and report statistics to ganglia. If you are using one of the modules that came with ganglia-logtailer (look in /usr/share/ganglia-logtailer), don't use the LWRP - instead create a crontab entry in your recipe.
 
@@ -77,7 +86,8 @@ For example, if my cookbook configures and installs nginx and I wish to use the 
  end
 * place the python module in mynginx/templates/ganglia/NginxLogtailer.py.erb
 
-== python
+python
+------
 
 Installs a python plugin.
 
@@ -99,14 +109,16 @@ Example:
 
 The content of 'options' will be passed to the templates
 
-= CAVEATS:
+Caveats
+=======
 
 This cookbook has been tested on Ubuntu 10.04 and Centos 5.5.
 
 Search seems to takes a moment or two to index.
 You may need to converge again to see recently added nodes.
 
-= Testing
+Testing
+=======
 
 This cookbook is set up to test using
 * knife test
@@ -121,5 +133,4 @@ To launch all the tests, run:
 
 For individual tests, examine the Strainerfile for the relevant commands to run.
 
-{rdoc-image:https://secure.travis-ci.org/ganglia/chef-ganglia.png}[http://travis-ci.org/ganglia/chef-ganglia]
 
