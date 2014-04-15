@@ -132,4 +132,4 @@ To launch all the tests, run:
 
 For individual tests, examine the Strainerfile for the relevant commands to run.
 
-
+Continuous tests are run using Travis CI. Travis only runs foodcritic and chefspec; knife test is broken and test kitchen doesn't work with Travis. You are encouraged to run those tests on your own branch.
