@@ -19,7 +19,7 @@ Requirements
 Attributes
 ==========
 
-* `node[:ganglia][:grid_name] - the name to use for the ganglia grid - displayed in the web UI
+* `node[:ganglia][:grid_name]` - the name to use for the ganglia grid - displayed in the web UI
 * `node[:ganglia][:server_role]` - the name of the role used for the ganglia collector and web server
 * `node[:ganglia][:server_host]` - (optional) If present, overrides server_role and uses the hostname provided as the ganglia server
 * `node[:gangila][:unicast]` - True indicates ganglia should use unicast; false indicates it should use multicast
@@ -27,7 +27,7 @@ Attributes
 * `node[:ganglia][:host_cluster]` - a hash with clustername => 1/0 pairs, where 1 indicates the node should be a member of the cluster
 * `node[:ganglia][:enable_rrdcached]` - Default true. Enables rrdcached on the gmetad server.
 * `node[:ganglia][:enable_two_gmetads]` - Default false. Setting to true runs two copies of gmetad on the server; one writes out RRDs and the web UI talks to the other. This improves web UI performance for large installations.
-* `node[:ganglia][:spoof_hostname] - Default false. Setting to true configures gmond to force the use of its hostname as the node name rather than the default ganglia behavior of using reverse DNS. Useful for cloud environments such as EC2.
+* `node[:ganglia][:spoof_hostname]` - Default false. Setting to true configures gmond to force the use of its hostname as the node name rather than the default ganglia behavior of using reverse DNS. Useful for cloud environments such as EC2.
 
 Usage
 =====
@@ -38,7 +38,7 @@ Adding the default recipe to your runlist will install gmond. This recipe should
 
 There should be one or more hosts running under the role indicated by `node[:ganglia][:server_role]`; these hosts will serve as the web UI and central collection point for all your metrics. It should run at least the ganglia::gmetad and ganglia::web recipes. It may also run the ganglia::gmond_collector recipe if you have multiple clusters in your grid.  Adding the ganglia::graphite recipe will enable graphite monitoring in addition to the standard ganglia graphing.
 
-The aggregator recipe will install aggregator.py and run it every minute from cron. The aggregation recipe should be run on the same node as runs your gmond collectors. It will look for attributes set in other recipes indicating what metrics to aggregate and how to aggregate them. It will connect ot each of the collector gmond processes, get all the relevant metrics, aggregate them, and re-submit them to the same gmond under the pseudo-host "all_<clustername>".
+The aggregator recipe will install aggregator.py and run it every minute from cron. The aggregation recipe should be run on the same node as runs your gmond collectors. It will look for attributes set in other recipes indicating what metrics to aggregate and how to aggregate them. It will connect ot each of the collector gmond processes, get all the relevant metrics, aggregate them, and re-submit them to the same gmond under the pseudo-host "all_${clustername}".
 
 LWRP
 ====
@@ -112,7 +112,7 @@ The content of 'options' will be passed to the templates
 Caveats
 =======
 
-This cookbook has been tested on Ubuntu 10.04 and Centos 5.5.
+This cookbook has been tested on Ubuntu 12.
 
 Search seems to takes a moment or two to index.
 You may need to converge again to see recently added nodes.
@@ -123,9 +123,8 @@ Testing
 This cookbook is set up to test using
 * knife test
 * foodcritic
-* test-kitchen
-** chefspec
-** minitest
+* chefspec
+* test-kitchen with minitest
 
 To launch all the tests, run:
 * bundle install
