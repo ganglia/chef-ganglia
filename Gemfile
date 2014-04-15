@@ -1,12 +1,10 @@
 source 'https://rubygems.org'
 
-gem 'chef'
-gem 'berkshelf'
-gem 'thor', '~> 0.18.0'
-gem 'strainer', '~> 3.3.0'
-gem 'foodcritic'
-gem 'minitest', '~> 3.0.0'
-gem 'chefspec', '~> 3.0'
+gem 'berkshelf', '~>2.0.15'
+gem 'strainer'
+gem 'foodcritic', '>=3.0.0'
+gem 'minitest'
+gem 'chefspec', '~>3.3.0'
 
 group :kitchen  do
   gem 'test-kitchen'
