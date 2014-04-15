@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-case node[:platform]
+case node['platform']
 when "ubuntu", "debian"
   package "ganglia-monitor"
 when "redhat", "centos", "fedora"
@@ -25,7 +25,7 @@ when "redhat", "centos", "fedora"
 
   execute "copy ganglia-monitor init script" do
     command "cp " +
-      "/usr/src/ganglia-#{node[:ganglia][:version]}/gmond/gmond.init " +
+      "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
       "/etc/init.d/ganglia-monitor"
     not_if "test -f /etc/init.d/ganglia-monitor"
   end
@@ -50,7 +50,7 @@ if ports.empty?
   clusternames.push('default')
 end
 
-case node[:ganglia][:unicast]
+case node['ganglia']['unicast']
 when true
   # fill in the gmond collectors by attribute if it exists, search if you find anything, or localhost.
   gmond_collectors = []
@@ -68,7 +68,7 @@ when true
     variables( :cluster_name => clusternames[0],
                :gmond_collectors => gmond_collectors,
                :ports => ports,
-               :spoof_hostname => node[:ganglia][:spoof_hostname],
+               :spoof_hostname => node['ganglia']['spoof_hostname'],
                :hostname => node.hostname )
     notifies :restart, "service[ganglia-monitor]"
   end
