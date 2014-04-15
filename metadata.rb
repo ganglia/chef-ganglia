@@ -12,6 +12,6 @@ version          "0.2.1"
 end
 
 recommends "graphite"
-suggests "iptables"
+depends "iptables"
 
 depends "runit"
