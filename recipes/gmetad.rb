@@ -68,12 +68,13 @@ when true
     template "/etc/ganglia/gmetad-norrds.conf" do
       source "gmetad.conf.erb"
       variables( :clusters => node['ganglia']['clusterport'].to_hash,
-                 :hosts => hosts,
+                 :hosts => gmond_collectors,
                  :cluster_name => node['ganglia']['cluster_name'],
                  :xml_port => node['ganglia']['two_gmetads']['xml_port'],
                  :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
                  :rrd_rootdir => node['ganglia']['two_gmetads']['empty_rrd_rootdir'],
-                 :write_rrds => "off")
+                 :write_rrds => "off",
+                 :grid_name => node['ganglia']['grid_name'])
       notifies :restart, "service[gmetad-norrds]"
     end
   end
