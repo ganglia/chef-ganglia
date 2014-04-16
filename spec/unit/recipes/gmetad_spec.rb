@@ -54,7 +54,7 @@ describe 'ganglia::gmetad' do
         %Q[data_source "default" host2:18649 host1:18649])
     end
   end
-  context 'two gmetad config' do
+  context 'unicode' do
     let(:chef_run) do
       runner = ChefSpec::Runner.new(
         platform: 'ubuntu',
@@ -73,6 +73,17 @@ describe 'ganglia::gmetad' do
         hosts << n
       end
       stub_search(:node, '*:*').and_return(hosts)
+    end
+    
+  end
+  context 'two gmetad config' do
+    let(:chef_run) do
+      runner = ChefSpec::Runner.new(
+        platform: 'ubuntu',
+        version: '12.04'
+      )
+      runner.node.set['ganglia']['enable_two_gmetads'] = true
+      runner.converge(described_recipe)
     end
     it 'creates an empty rrddir' do
       expect(chef_run).to create_directory('/var/lib/ganglia/empty-rrds-dir').with(
