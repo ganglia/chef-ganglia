@@ -79,7 +79,6 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['host1', 'host2'],
-          :cluster_name => nil,
           :xml_port => 8651,
           :interactive_port => 8652,
           :rrd_rootdir => '/var/lib/ganglia/rrds',
@@ -114,7 +113,6 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['127.0.0.1'],
-          :cluster_name => nil,
           :xml_port => 8651,
           :interactive_port => 8652,
           :rrd_rootdir => '/var/lib/ganglia/rrds',
@@ -127,7 +125,6 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['127.0.0.1'],
-          :cluster_name => nil,
           :xml_port => 8661,
           :interactive_port => 8662,
           :rrd_rootdir => '/var/lib/ganglia/empty-rrds-dir',
