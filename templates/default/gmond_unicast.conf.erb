@@ -13,7 +13,7 @@ globals {
   gexec = no
   send_metadata_interval = 30
 <% if @spoof_hostname %>
-  override_hostname = <%= node.hostname %>
+  override_hostname = <%= @hostname %>
 <% end %>
 
 }

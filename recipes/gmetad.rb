@@ -48,7 +48,7 @@ end
 
 case node['ganglia']['unicast']
 when true
-  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node.ipaddress}
+  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
   if gmond_collectors.empty?
     gmond_collectors = ['127.0.0.1']
   end
@@ -56,7 +56,6 @@ when true
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => gmond_collectors,
-               :cluster_name => node['ganglia']['cluster_name'],
                :xml_port => node['ganglia']['gmetad']['xml_port'],
                :interactive_port => node['ganglia']['gmetad']['interactive_port'],
                :rrd_rootdir => node['ganglia']['rrd_rootdir'],
@@ -69,7 +68,6 @@ when true
       source "gmetad.conf.erb"
       variables( :clusters => node['ganglia']['clusterport'].to_hash,
                  :hosts => gmond_collectors,
-                 :cluster_name => node['ganglia']['cluster_name'],
                  :xml_port => node['ganglia']['two_gmetads']['xml_port'],
                  :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
                  :rrd_rootdir => node['ganglia']['two_gmetads']['empty_rrd_rootdir'],
@@ -82,7 +80,7 @@ when true
     include_recipe "ganglia::iptables"
   end
 when false
-  ips = search(:node, "*:*").map {|node| node.ipaddress}
+  ips = search(:node, "*:*").map {|node| node['ipaddress']}
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
