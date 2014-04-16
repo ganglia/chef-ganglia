@@ -54,4 +54,45 @@ describe 'ganglia::gmetad' do
         %Q[data_source "default" host2:18649 host1:18649])
     end
   end
+  context 'two gmetad config' do
+    let(:chef_run) do
+      runner = ChefSpec::Runner.new(
+        platform: 'ubuntu',
+        version: '12.04'
+      )
+      runner.node.set['ganglia']['enable_two_gmetads'] = true
+      runner.converge(described_recipe)
+    end
+    before do
+      hosts = []
+      ['host1', 'host2'].each do |host|
+        n = stub_node(platform: 'ubuntu', version: '12.04') do |node|
+          node.name(host)
+          node.automatic['ipaddress'] = host
+        end
+        hosts << n
+      end
+      stub_search(:node, '*:*').and_return(hosts)
+    end
+    it 'creates an empty rrddir' do
+      expect(chef_run).to create_directory('/var/lib/ganglia/empty-rrds-dir').with(
+        :owner => 'nobody',
+        )
+    end
+    it 'creates second gmetad init script' do
+      expect(chef_run).to create_template('/etc/init.d/gmetad-norrds').with(
+        variables: {
+          :gmetad_name => 'gmetad-norrds'
+          })
+      expect(chef_run).to render_file('/etc/init.d/gmetad-norrds').with_content(
+        %Q[NAME=gmetad-norrds])
+    end
+    it 'second init script notifies second gmetad to restart' do
+      gmetad_initscript = chef_run.template('/etc/init.d/gmetad-norrds')
+      expect(gmetad_initscript).to notify('service[gmetad-norrds]').to(:restart)
+    end
+    it 'starts second gmetad process' do
+      expect(chef_run).to start_service('gmetad-norrds')
+    end
+  end
 end
