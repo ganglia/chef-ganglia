@@ -16,8 +16,7 @@ node['ganglia']['clusterport'].each do |clust,port|
   end
   template "/etc/init.d/ganglia-monitor-#{clust}" do
     source "gmond_collector-startscript.erb"
-    variables( :cluster_name => clust,
-               :port => port )
+    variables( :cluster_name => clust)
     mode 0755
     notifies :restart, "service[ganglia-monitor-#{clust}]"
   end

@@ -1,5 +1,5 @@
-
 actions :enable, :disable
+default_action :enable
 
 attribute :module_name, :kind_of => String, :name_attribute => true
 attribute :log_file, :kind_of => String

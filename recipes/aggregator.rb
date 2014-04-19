@@ -25,8 +25,8 @@ search(:node, "ganglia_aggregated_metrics:* AND chef_environment:#{node.chef_env
 end
 
 # run the aggregator that generates all_* metrics
-template '/usr/local/bin/Aggregator.py' do
-  source "ganglia/Aggregator.py.erb"
+template '/usr/local/bin/aggregator' do
+  source "aggregator.py.erb"
   mode "0755"
   variables(
     :clusters => node['ganglia']['clusterport'],
@@ -38,5 +38,5 @@ cron "aggregate-ganglia-data" do
   hour "*"
   minute "*"
   user "root"
-  command "python /usr/local/bin/Aggregator.py"
+  command "python /usr/local/bin/aggregator"
 end

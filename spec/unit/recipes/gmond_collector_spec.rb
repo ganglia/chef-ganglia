@@ -59,7 +59,6 @@ tcp_accept_channel {
           expect(chef_run).to create_template("/etc/init.d/ganglia-monitor-#{cluster}").with(
             variables: {
               :cluster_name => cluster,
-              :port => port
             }
           )
         end
