@@ -15,10 +15,11 @@ directory "/var/lib/ganglia/rrds" do
   owner node['ganglia']['user']
   recursive true
 end
-directory node['ganglia']['two_gmetads']['empty_rrd_rootdir'] do
-  owner node['ganglia']['user']
-  recursive true
-  only_if { node['ganglia']['enable_two_gmetads'] }
+if node['ganglia']['enable_two_gmetads']
+  directory node['ganglia']['two_gmetads']['empty_rrd_rootdir'] do
+    owner node['ganglia']['user']
+    recursive true
+  end
 end
 
 # if we should use rrdcached, set it up here.
@@ -62,17 +63,18 @@ when true
                :grid_name => node['ganglia']['grid_name'])
     notifies :restart, "service[gmetad]"
   end
-  template "/etc/ganglia/gmetad-norrds.conf" do
-    source "gmetad.conf.erb"
-    variables( :clusters => node['ganglia']['clusterport'].to_hash,
-               :hosts => gmond_collectors,
-               :xml_port => node['ganglia']['two_gmetads']['xml_port'],
-               :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
-               :rrd_rootdir => node['ganglia']['two_gmetads']['empty_rrd_rootdir'],
-               :write_rrds => "off",
-               :grid_name => node['ganglia']['grid_name'])
-    notifies :restart, "service[gmetad-norrds]"
-    only_if { node['ganglia']['enable_two_gmetads'] }
+  if node['ganglia']['enable_two_gmetads']
+    template "/etc/ganglia/gmetad-norrds.conf" do
+      source "gmetad.conf.erb"
+      variables( :clusters => node['ganglia']['clusterport'].to_hash,
+                 :hosts => gmond_collectors,
+                 :xml_port => node['ganglia']['two_gmetads']['xml_port'],
+                 :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
+                 :rrd_rootdir => node['ganglia']['two_gmetads']['empty_rrd_rootdir'],
+                 :write_rrds => "off",
+                 :grid_name => node['ganglia']['grid_name'])
+      notifies :restart, "service[gmetad-norrds]"
+    end
   end
   if node['recipes'].include? "iptables"
     include_recipe "ganglia::iptables"

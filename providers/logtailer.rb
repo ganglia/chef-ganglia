@@ -26,9 +26,6 @@ action :enable do
     #build the command
     command "/usr/sbin/ganglia-logtailer #{metric_prefix_arg} --classname #{new_resource.module_name} --log_file #{new_resource.log_file} --mode cron"
   end
-
-  # My state has changed so I'd better notify observers
-  new_resource.updated_by_last_action(true)
 end
 
 action :disable do
@@ -36,7 +33,4 @@ action :disable do
   cron "ganglia-logtailer-#{new_resource.module_name}" do
     action :delete
   end
-
-  # My state has changed so I'd better notify observers
-  new_resource.updated_by_last_action(true)
 end
