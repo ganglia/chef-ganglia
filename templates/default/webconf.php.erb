@@ -9,8 +9,5 @@ $conf['auth_system'] = <%= node['ganglia']['web']['auth_system'] %>;
 $conf['rrdcached_socket'] = "<%= node['ganglia']['rrdcached']['limited_socket'] %>";
 <% end %>
 $conf['ganglia_port'] = <%= @xml_port %>;
-<%- if !node['ganglia']['graphite_host'].nil? %>
-$conf['graphite_url_base'] = "http://<%= node['ganglia']['graphite_host'] %>/render";
-<%- end %>
 ?>
 
