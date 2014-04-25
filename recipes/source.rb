@@ -3,7 +3,7 @@ if platform?( "redhat", "centos", "fedora" )
     package p
   end
 elsif platform?("ubuntu", "debian")
-  %w[build-essential libconfuse-devel librrd-devel libexpat1-devel libapr1-devel].each do |p|
+  %w[build-essential libconfuse-dev librrd-dev libexpat1-dev libapr1-dev].each do |p|
     package p
   end
 end
