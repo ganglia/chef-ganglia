@@ -33,9 +33,9 @@ end
 # Notes:
 # * don't use port 8649
 # * don't put spaces in cluster names
-default['ganglia']['clusterport'] = {
-                                    "default"       => 18649
-                                  }
+#default['ganglia']['clusterport'] = {
+#                                    "default"       => 18649
+#                                  }
 # this is set on the host to determine which cluster it should join
 # it's a hash with one key per cluster; it should join all clusters
 # that have a value of 1.  If a machine is part of two clusters,
