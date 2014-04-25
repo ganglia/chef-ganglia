@@ -15,6 +15,8 @@ default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['spoof_hostname'] = false
 default['ganglia']['graphite_host'] = nil
 default['ganglia']['graphite_port'] = 2003
+default['ganglia']['graphite_path'] = "datacenter1.gmetad.%s.%h.%m"
+
 
 case node['platform']
 when "ubuntu", "debian"

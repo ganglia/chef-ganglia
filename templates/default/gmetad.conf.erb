@@ -161,7 +161,7 @@ carbon_port "<%= node['ganglia']['graphite_port'] %>"
 # %m -> metric (metric name)
 # default: graphite_prefix.%s.%h.%m
 # graphite_path "datacenter1.gmetad.%s.%h.%m
-graphite_path "datacenter1.gmetad.%s.%h.%m"
+graphite_path %<= node['ganglia']['graphite_path'] %>
 
 # Number of milliseconds gmetad will wait for a response from the graphite server
 # default: 500
