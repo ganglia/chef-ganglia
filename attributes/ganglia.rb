@@ -1,6 +1,9 @@
-default['ganglia']['version'] = "3.1.7"
-default['ganglia']['uri'] = "http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz/download"
-default['ganglia']['checksum'] = "bb1a4953"
+default['ganglia']['version'] = "3.6.0"
+default['ganglia']['uri'] = "http://downloads.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz"
+default['ganglia']['webfrontend_version'] = "3.5.11"
+default['ganglia']['webfrontend_uri'] = "http://downloads.sourceforge.net/project/ganglia/ganglia-web/#{node['ganglia']['webfrontend_version']}/ganglia-web-#{node['ganglia']['webfrontend_version']}.tar.gz"
+default['ganglia']['checksum'] = "89eae02e1a117040d60b3b561fe55f88d7f8cf41b94af1492969ef68e6797886"
+default['ganglia']['webfrontend_checksum'] = "5c0531d3f48c443e6329078f93748241d9c830374fca631e3480cb5b536ed46e"
 default['ganglia']['grid_name'] = "default"
 default['ganglia']['unicast'] = false
 default['ganglia']['server_role'] = "ganglia"
@@ -10,6 +13,13 @@ default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['spoof_hostname'] = false
+
+case node['platform']
+when "ubuntu", "debian"
+  default['ganglia']['from_source'] = false
+when "redhat", "centos", "fedora"
+  default['ganglia']['from_source'] = true
+end
 
 # Uncomment this to override the search for server_role and just specify the host instead
 # default['ganglia']['server_host'] = 'ganglia.example.com'

@@ -1,6 +1,7 @@
 site :opscode
 
 metadata
+cookbook 'apt'
 
 group :test do
   cookbook 'minitest-handler'

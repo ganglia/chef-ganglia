@@ -1,14 +1,7 @@
-case node['platform']
-when "ubuntu", "debian"
-  package "gmetad"
-when "redhat", "centos", "fedora"
+if node['ganglia']['from_source']
   include_recipe "ganglia::source"
-  execute "copy gmetad init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node['ganglia']['version']}/gmetad/gmetad.init " +
-      "/etc/init.d/gmetad"
-    not_if "test -f /etc/init.d/gmetad"
-  end
+else
+  package "gmetad"
 end
 
 directory "/var/lib/ganglia/rrds" do

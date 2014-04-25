@@ -17,20 +17,33 @@
 # limitations under the License.
 #
 
-case node['platform']
-when "ubuntu", "debian"
-  package "ganglia-monitor"
-when "redhat", "centos", "fedora"
+if node['ganglia']['from_source']
   include_recipe "ganglia::source"
 
-  execute "copy ganglia-monitor init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
-      "/etc/init.d/ganglia-monitor"
-    not_if "test -f /etc/init.d/ganglia-monitor"
+  if platform?("ubuntu", "debian")
+    cookbook_file "/etc/init.d/ganglia-monitor" do
+      source "ganglia-monitor.init.ubuntu"
+      owner "root"
+      group "root"
+      mode "0755"
+    end
+  else
+    execute "copy ganglia-monitor init script" do
+      command "cp " +
+        "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
+        "/etc/init.d/ganglia-monitor"
+      not_if "test -f /etc/init.d/ganglia-monitor"
+    end
   end
 
-  user "ganglia"
+  user "ganglia" do
+    action :create
+    comment "Ganglia User"
+    system true
+  end
+
+else
+  package "ganglia-monitor"
 end
 
 directory "/etc/ganglia"

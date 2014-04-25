@@ -1,8 +1,11 @@
 if platform?( "redhat", "centos", "fedora" )
-  package "apr-devel"
-  package "libconfuse-devel"
-  package "expat-devel"
-  package "rrdtool-devel"
+  %w[apr-devel libconfuse-devel expat-devel rrdtool-devel].each do |p|
+    package p
+  end
+elsif platform?("ubuntu", "debian")
+  %w[build-essential libconfuse-devel librrd-devel libexpat1-devel libapr1-devel].each do |p|
+    package p
+  end
 end
 
 remote_file "/usr/src/ganglia-#{node['ganglia']['version']}.tar.gz" do
@@ -19,7 +22,7 @@ execute "untar ganglia" do
 end
 
 execute "configure ganglia build" do
-  command "./configure --with-gmetad --with-libpcre=no --sysconfdir=/etc/ganglia"
+  command "./configure --with-gmetad --with-libpcre=no --sysconfdir=/etc/ganglia --prefix=/usr"
   creates "#{src_path}/config.log"
   cwd src_path
 end
