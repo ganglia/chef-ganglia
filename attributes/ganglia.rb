@@ -13,6 +13,7 @@ default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['spoof_hostname'] = false
+default['ganglia']['graphite_host'] = nil
 
 case node['platform']
 when "ubuntu", "debian"

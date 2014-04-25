@@ -1,4 +1,9 @@
-graphite_host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
+if node['ganglia']['graphite_host'].nil?
+  graphite_host = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
+else
+  graphite_host = node['ganglia']['graphite_host']
+end
+
 if graphite_host.empty?
   graphite_host = "localhost"
 end
