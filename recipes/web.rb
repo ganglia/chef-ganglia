@@ -74,8 +74,8 @@ template "/etc/ganglia-webfrontend/conf.php" do
   variables( :xml_port => xml_port )
 end
 
-link "/etc/ganglia-webfrontend/conf.php" do
-  to "/usr/share/ganglia-webfrontend/conf.php"
+link "/usr/share/ganglia-webfrontend/conf.php" do
+  to "/etc/ganglia-webfrontend/conf.php"
 end
 
 service "apache2" do
