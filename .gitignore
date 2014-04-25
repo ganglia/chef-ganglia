@@ -4,3 +4,4 @@
 Berksfile.lock
 Gemfile.lock
 
+.rubocop.yml
