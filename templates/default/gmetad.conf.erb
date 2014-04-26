@@ -149,7 +149,7 @@ carbon_port "<%= node['ganglia']['graphite_port'] %>"
 # metric names exported by gmetad. Graphite uses dot-
 # separated paths to organize and refer to metrics.
 # default: unspecified
-# graphite_prefix "datacenter1.gmetad"
+graphite_prefix "<%= node['ganglia']['graphite_prefix] %>"
 #
 # A user-definable graphite path. Graphite uses dot-
 # separated paths to organize and refer to metrics.
@@ -161,7 +161,6 @@ carbon_port "<%= node['ganglia']['graphite_port'] %>"
 # %m -> metric (metric name)
 # default: graphite_prefix.%s.%h.%m
 # graphite_path "datacenter1.gmetad.%s.%h.%m
-graphite_path "<%= node['ganglia']['graphite_path'] %>"
 
 # Number of milliseconds gmetad will wait for a response from the graphite server
 # default: 500
