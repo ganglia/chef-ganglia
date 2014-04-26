@@ -33,15 +33,23 @@ if node['ganglia']['from_source']
     action :run
   end
 
-  execute "copy apache config" do
-    command "cp apache.conf /etc/ganglia-webfrontend/"
-    creates "/etc/ganglia-webfrontend/apache.conf"
-    cwd "/usr/src/ganglia-web-#{node['ganglia']['webfrontend_version']}"
-    action :run
-  end
-
 else
   package "ganglia-webfrontend"
+end
+
+execute "enable mod rewrite"  do
+  command "a2enmod rewrite"
+  creates "/etc/apache2/mods-enabled/rewrite.load"
+  action :run
+  notifies :reload, "service[apache2]"
+end
+
+cookbook_file "/etc/ganglia-webfrontend/apache.conf" do
+  source "apache.conf"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :reload, "service[apache2]"
 end
 
 link "/etc/apache2/sites-available/ganglia" do
