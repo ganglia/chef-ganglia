@@ -73,31 +73,31 @@ modules {
   }
   module {
     name = "cpu_module"
-    path = "modcpu.so"
+    path = "<%= node['ganglia']['mod_path'] %>modcpu.so"
   }
   module {
     name = "disk_module"
-    path = "moddisk.so"
+    path = "<%= node['ganglia']['mod_path'] %>moddisk.so"
   }
   module {
     name = "load_module"
-    path = "modload.so"
+    path = "<%= node['ganglia']['mod_path'] %>modload.so"
   }
   module {
     name = "mem_module"
-    path = "modmem.so"
+    path = "<%= node['ganglia']['mod_path'] %>modmem.so"
   }
   module {
     name = "net_module"
-    path = "modnet.so"
+    path = "<%= node['ganglia']['mod_path'] %>modnet.so"
   }
   module {
     name = "proc_module"
-    path = "modproc.so"
+    path = "<%= node['ganglia']['mod_path'] %>modproc.so"
   }
   module {
     name = "sys_module"
-    path = "modsys.so"
+    path = "<%= node['ganglia']['mod_path'] %>modsys.so"
   }
 }
 
