@@ -53,3 +53,19 @@ directory "/usr/lib64/ganglia/python_modules" do
   mode 00755
   action :create
 end
+
+directory "/etc/ganglia/conf.d" do
+  owner "root"
+  group "root"
+  mode 00755
+  action :create
+end
+
+cookbook_file "/etc/ganglia/conf.d/modpython.conf" do
+  source "modpython.conf"
+  owner "root"
+  group "root"
+  mode 00644
+end
+
+
