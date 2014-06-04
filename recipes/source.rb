@@ -3,7 +3,7 @@ if platform?( "redhat", "centos", "fedora" )
     package p
   end
 elsif platform?("ubuntu", "debian")
-  %w[build-essential libconfuse-dev librrd-dev libexpat1-dev libapr1-dev].each do |p|
+  %w[build-essential libconfuse-dev librrd-dev libexpat1-dev libapr1-dev python-dev].each do |p|
     package p
   end
 end
@@ -45,4 +45,11 @@ link "/usr/lib/ganglia" do
     node['kernel']['machine'] == "x86_64" and
       platform?( "redhat", "centos", "fedora" )
   end
+end
+
+directory "/usr/lib64/ganglia/python_modules" do
+  owner "root"
+  group "root"
+  mode 00755
+  action :create
 end
