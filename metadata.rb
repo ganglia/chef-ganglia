@@ -5,7 +5,7 @@ maintainer_email "ganglia-developers@lists.sourceforge.net"
 license          "Apache 2.0"
 description      "Installs/Configures ganglia"
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "0.3.12"
+version          "0.3.13"
 
 %w{ debian ubuntu redhat centos fedora }.each do |os|
   supports os
