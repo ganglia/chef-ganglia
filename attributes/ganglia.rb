@@ -9,6 +9,10 @@ default['ganglia']['rrd_rootdir'] = "/var/lib/ganglia/rrds"
 default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
+default['ganglia']['gmetad']['write_rrds'] = 'on'
+default['ganglia']['gmetad']['carbon_server'] = '127.0.0.1'
+default['ganglia']['gmetad']['carbon_port'] = 2003
+default['ganglia']['gmetad']['graphite_prefix'] = 'ganglia'
 default['ganglia']['spoof_hostname'] = false
 
 default['ganglia']['mod_path'] = ''

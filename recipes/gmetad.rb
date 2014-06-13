@@ -59,7 +59,10 @@ when true
                :xml_port => node['ganglia']['gmetad']['xml_port'],
                :interactive_port => node['ganglia']['gmetad']['interactive_port'],
                :rrd_rootdir => node['ganglia']['rrd_rootdir'],
-               :write_rrds => "on",
+               :write_rrds => node['ganglia']['gmetad']['write_rrds'],
+               :carbon_server => node['ganglia']['gmetad']['carbon_server'],
+               :carbon_port => node['ganglia']['gmetad']['carbon_port'],
+               :graphite_prefix => node['ganglia']['gmetad']['graphite_prefix'],
                :grid_name => node['ganglia']['grid_name'])
     notifies :restart, "service[gmetad]"
   end
@@ -85,6 +88,10 @@ when false
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => ips,
+               :write_rrds => node['ganglia']['gmetad']['write_rrds'],
+               :carbon_server => node['ganglia']['gmetad']['carbon_server'],
+               :carbon_port => node['ganglia']['gmetad']['carbon_port'],
+               :graphite_prefix => node['ganglia']['gmetad']['graphite_prefix'],
                :grid_name => node['ganglia']['grid_name'])
     notifies :restart, "service[gmetad]"
   end
