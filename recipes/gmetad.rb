@@ -1,6 +1,14 @@
+service "gmetad" do
+  supports :restart => true, :start => true, :stop => true, :reload => true
+  action :nothing
+end
+
 case node['platform']
 when "ubuntu", "debian"
-  package "gmetad"
+  package "gmetad" do
+      action :install
+      notifies :stop, "service[gmetad]", :immediately
+  end
 when "redhat", "centos", "fedora"
   include_recipe "ganglia::source"
   execute "copy gmetad init script" do
@@ -97,8 +105,8 @@ template "/etc/init.d/gmetad" do
   variables( :gmetad_name => "gmetad" )
   notifies :restart, "service[gmetad]"
 end
+
 service "gmetad" do
-  supports :restart => true
   action [ :enable, :start ]
 end
 
