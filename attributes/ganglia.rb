@@ -10,9 +10,9 @@ default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['gmetad']['write_rrds'] = 'on'
-default['ganglia']['gmetad']['carbon_server'] = '127.0.0.1'
-default['ganglia']['gmetad']['carbon_port'] = 2003
-default['ganglia']['gmetad']['graphite_prefix'] = 'ganglia'
+default['ganglia']['gmetad']['carbon_server'] = nil
+default['ganglia']['gmetad']['carbon_port'] = nil
+default['ganglia']['gmetad']['graphite_prefix'] = nil
 default['ganglia']['spoof_hostname'] = false
 
 default['ganglia']['mod_path'] = ''

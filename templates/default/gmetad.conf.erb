@@ -129,6 +129,6 @@ rrd_rootdir "<%= @rrd_rootdir %>"
 # default: on
 write_rrds <%= @write_rrds %>
 
-carbon_server "<%= @carbon_server %>"
-carbon_port <%= @carbon_port %>
-graphite_prefix "<%= @graphite_prefix %>"
+<% unless @carbon_server.nil? -%>carbon_server "<%= @carbon_server %>"<% end -%>
+<% unless @carbon_port.nil? -%>carbon_port <%= @carbon_port %><% end -%>
+<% unless @graphite_prefix.nil? -%>graphite_prefix "<%= @graphite_prefix %>"<% end -%>
