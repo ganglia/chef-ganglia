@@ -47,7 +47,11 @@ describe 'ganglia::gmetad' do
         variables: {
           :clusters => {"default" => 18649},
           :hosts => ["host1", "host2"],
-          :grid_name => "default"
+          :grid_name => "default",
+          :write_rrds=>"on",
+          :carbon_server=>nil,
+          :carbon_port=>nil,
+          :graphite_prefix=>nil,
         }
       )
       expect(chef_run).to render_file("/etc/ganglia/gmetad.conf").with_content(
@@ -83,16 +87,20 @@ describe 'ganglia::gmetad' do
           :interactive_port => 8652,
           :rrd_rootdir => '/var/lib/ganglia/rrds',
           :write_rrds => "on",
-          :grid_name => 'default'
+          :grid_name => 'default',
+          :write_rrds=>"on",
+          :carbon_server=>nil,
+          :carbon_port=>nil,
+          :graphite_prefix=>nil,
           })
     end
     it 'gmetad.conf notifies gmetad to restart' do
       gmetad_conf = chef_run.template('/etc/ganglia/gmetad.conf')
-      expect(gmetad_conf).to notify('service[gmetad]').to(:restart)      
+      expect(gmetad_conf).to notify('service[gmetad]').to(:restart)
     end
     it 'does not include iptables' do
       expect(chef_run).to_not include_recipe('ganglia::iptables')
-      
+
     end
   end
   context 'unicast with two gmetads and empty search' do
@@ -117,7 +125,11 @@ describe 'ganglia::gmetad' do
           :interactive_port => 8652,
           :rrd_rootdir => '/var/lib/ganglia/rrds',
           :write_rrds => "on",
-          :grid_name => 'default'
+          :grid_name => 'default',
+          :write_rrds=>"on",
+          :carbon_server=>nil,
+          :carbon_port=>nil,
+          :graphite_prefix=>nil,
           })
     end
     it 'creates gmetad-norrds.conf template' do
@@ -129,7 +141,7 @@ describe 'ganglia::gmetad' do
           :interactive_port => 8662,
           :rrd_rootdir => '/var/lib/ganglia/empty-rrds-dir',
           :write_rrds => "off",
-          :grid_name => 'default'
+          :grid_name => 'default',
           })
     end
   end
@@ -161,6 +173,32 @@ describe 'ganglia::gmetad' do
     end
     it 'starts second gmetad process' do
       expect(chef_run).to start_service('gmetad-norrds')
+    end
+  end
+
+  it 'does not set graphite options by default' do
+    expect(chef_run).to create_template("/etc/ganglia/gmetad.conf")
+    expect(chef_run).to_not render_file("/etc/ganglia/gmetad.conf").with_content(/carbon_server/)
+    expect(chef_run).to_not render_file("/etc/ganglia/gmetad.conf").with_content(/carbon_port/)
+    expect(chef_run).to_not render_file("/etc/ganglia/gmetad.conf").with_content(/graphite_prefix/)
+  end
+
+  context 'set graphite config in gmetad' do
+    let(:chef_run) do
+      runner = ChefSpec::Runner.new(
+        platform: 'ubuntu',
+        version: '12.04'
+      )
+      runner.node.set['ganglia']['gmetad']['carbon_server'] = '127.0.0.1'
+      runner.node.set['ganglia']['gmetad']['carbon_port'] = 8125
+      runner.node.set['ganglia']['gmetad']['graphite_prefix'] = 'ganglia'
+      runner.converge(described_recipe)
+    end
+    it 'does set graphite options by default' do
+      expect(chef_run).to create_template("/etc/ganglia/gmetad.conf")
+      expect(chef_run).to render_file("/etc/ganglia/gmetad.conf").with_content(/carbon_server "127.0.0.1"/)
+      expect(chef_run).to render_file("/etc/ganglia/gmetad.conf").with_content(/carbon_port 8125/)
+      expect(chef_run).to render_file("/etc/ganglia/gmetad.conf").with_content(/graphite_prefix "ganglia"/)
     end
   end
 end
