@@ -92,6 +92,9 @@ trusted_hosts <%= @trusted_hosts.map {|host| host.to_s}.join(' ') %>
 # data, then set this value to "on"
 # default: off
 # all_trusted on
+<% unless @all_trusted.nil? %>
+all_trusted <%= @all_trusted %>
+<% end %>
 #
 #-------------------------------------------------------------------------------
 # If you don't want gmetad to setuid then set this to off
