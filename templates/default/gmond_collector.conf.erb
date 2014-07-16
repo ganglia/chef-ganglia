@@ -12,6 +12,7 @@ globals {
   cleanup_threshold = 300 /*secs */
   gexec = no
   send_metadata_interval = 30
+  override_hostname = <%= node[:hostname] %>
 }
 
 /* If a cluster attribute is specified, then all gmond hosts are wrapped inside
