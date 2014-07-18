@@ -4,7 +4,7 @@ case node['platform']
 when "ubuntu", "debian"
   package "ganglia-webfrontend"
 
-  link "/etc/apache2/sites-enabled/ganglia" do
+  link "/etc/apache2/sites-enabled/001-ganglia.conf" do
     to "/etc/ganglia-webfrontend/apache.conf"
     notifies :restart, "service[apache2]"
   end
