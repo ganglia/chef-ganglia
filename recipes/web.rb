@@ -52,15 +52,15 @@ if node['ganglia']['web']['auth_system'] == "enabled"
   end
 end
 
-xml_port = if node['ganglia']['enable_two_gmetads'] then
-                node['ganglia']['two_gmetads']['xml_port']
+interactive_port = if node['ganglia']['enable_two_gmetads'] then
+                node['ganglia']['two_gmetads']['interactive_port']
            else
-                node['ganglia']['gmetad']['xml_port']
+                node['ganglia']['gmetad']['interactive_port']
            end
 template "/etc/ganglia-webfrontend/conf.php" do
   source "webconf.php.erb"
   mode "0644"
-  variables( :xml_port => xml_port, :users => users.nil? ? '' : users )
+  variables( :interactive_port => interactive_port, :users => users.nil? ? '' : users )
 end
 
 service "apache2" do
