@@ -1,0 +1,8 @@
+SetEnv ganglia_secret <%= node['ganglia']['ganglia_secret'] %>
+
+<Files "login.php">
+  AuthType Basic
+  AuthName "Ganglia Access"
+  AuthUserFile <%= node['ganglia']['web']['htpasswd_path']%>htpasswd.users
+  Require valid-user
+</Files>

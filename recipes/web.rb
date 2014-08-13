@@ -22,6 +22,36 @@ when "redhat", "centos", "fedora"
   end
 end
 
+if node['ganglia']['web']['auth_system'] == "enabled"
+  if Chef::Config[:solo]
+    if node['ganglia']['ganglia_secret'].nil?
+      Chef::Application.fatal! "You must set node['ganglia']['ganglia_secret'] in chef-solo mode." 
+    end
+  else
+    require 'digest'
+    node.set_unless['ganglia']['ganglia_secret'] = Digest::SHA1.hexdigest(srand().to_s)
+    node.save
+  end
+  template '/etc/ganglia-webfrontend/ganglia-auth.conf' do
+    source 'ganglia_auth.conf.erb'
+    mode 0644
+  end
+
+  link "/etc/apache2/sites-enabled/ganglia-auth" do
+    to "/etc/ganglia-webfrontend/ganglia-auth.conf"
+    notifies :restart, "service[apache2]"
+  end
+
+  users = search(:users, "ganglia:* AND password:*")
+
+  template "#{node['ganglia']['web']['htpasswd_path']}htpasswd.users" do
+    source "htpasswd.users.erb"
+    mode 0644
+    variables(:users => users)
+    notifies :restart, "service[apache2]"
+  end
+end
+
 xml_port = if node['ganglia']['enable_two_gmetads'] then
                 node['ganglia']['two_gmetads']['xml_port']
            else
@@ -30,7 +60,7 @@ xml_port = if node['ganglia']['enable_two_gmetads'] then
 template "/etc/ganglia-webfrontend/conf.php" do
   source "webconf.php.erb"
   mode "0644"
-  variables( :xml_port => xml_port )
+  variables( :xml_port => xml_port, :users => users.nil? ? '' : users )
 end
 
 service "apache2" do
