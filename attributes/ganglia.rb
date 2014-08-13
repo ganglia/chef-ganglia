@@ -52,6 +52,8 @@ default['ganglia']['rrdcached']['delay'] = 240 # previous hard-coded value
 # attributes for web configuration
 # whether to use authentication: options 'disabled', 'readonly', and 'enabled'
 default['ganglia']['web']['auth_system'] = 'disabled'
+# path to htpasswd file
+default['ganglia']['web']['htpasswd_path'] = '/etc/ganglia-webfrontend/'
 
 # run two gmetads on the web server; one handles writing rrds and the other
 # serves interactive queries from the web ui. Set this to true if you have >300k metrics

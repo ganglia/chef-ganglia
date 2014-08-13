@@ -9,4 +9,11 @@ $conf['auth_system'] = '<%= node['ganglia']['web']['auth_system'] %>';
 $conf['rrdcached_socket'] = "<%= node['ganglia']['rrdcached']['limited_socket'] %>";
 <% end %>
 $conf['ganglia_port'] = <%= @xml_port %>;
+<% if node['ganglia']['web']['auth_system'] == 'enabled' %>
+$acl = GangliaAcl::getInstance();
+<% @users.each do |user| %>
+$acl->addRole( '<%= user["id"] %>', GangliaAcl::<%= user["ganglia"] %> );
+<% end %>
+$acl->deny(GangliaAcl::GUEST, GangliaAcl::ALL_CLUSTERS, GangliaAcl::VIEW)
+<% end %>
 ?>
