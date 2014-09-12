@@ -83,6 +83,7 @@ end
 
 service "ganglia-monitor" do
   pattern "gmond"
+  provider Chef::Provider::Service::Upstart if (node.platform?('ubuntu') && node.platform_version.include?('14'))
   supports :restart => true
   action [ :enable, :start ]
 end
