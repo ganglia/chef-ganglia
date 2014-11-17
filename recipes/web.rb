@@ -37,7 +37,7 @@ if node['ganglia']['web']['auth_system'] == "enabled"
     mode 0644
   end
 
-  link "/etc/apache2/sites-enabled/ganglia-auth" do
+  link "/etc/apache2/sites-enabled/ganglia-auth.conf" do
     to "/etc/ganglia-webfrontend/ganglia-auth.conf"
     notifies :restart, "service[apache2]"
   end
