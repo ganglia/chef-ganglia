@@ -9,6 +9,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON=/usr/sbin/gmond
 NAME=gmond-<%= @cluster_name %>
+PROC_NAME=gmond
 DESC="Ganglia Monitor Daemon"
 CONF=/etc/ganglia/gmond_collector_<%= @cluster_name %>.conf
 
@@ -26,7 +27,7 @@ case "$1" in
   stop)
   echo -n "Stopping $DESC: "
   start-stop-daemon --stop  --quiet --oknodo \
-    --pidfile /var/run/${NAME}.pid --name $NAME 2>&1 > /dev/null
+    --pidfile /var/run/${NAME}.pid --name ${PROC_NAME} 2>&1 > /dev/null
   echo "$NAME."
   ;;
   reload)
