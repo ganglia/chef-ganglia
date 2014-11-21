@@ -91,12 +91,15 @@ when false
 end
 
 # drop in our own gmetad init script to enable rrdcached if appropriate
-template "/etc/init.d/gmetad" do
-  source "gmetad-startscript.erb"
-  mode "0755"
-  variables( :gmetad_name => "gmetad" )
-  notifies :restart, "service[gmetad]"
+if node['ganglia']['enable_rrdcached'] == true
+  template "/etc/init.d/gmetad" do
+    source "gmetad-startscript.erb"
+     mode "0755"
+     variables( :gmetad_name => "gmetad" )
+     notifies :restart, "service[gmetad]"
+  end
 end
+
 service "gmetad" do
   supports :restart => true
   action [ :enable, :start ]

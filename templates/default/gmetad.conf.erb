@@ -127,7 +127,9 @@ interactive_port <%= @interactive_port %>
 # default: "/var/lib/ganglia/rrds"
 rrd_rootdir "<%= @rrd_rootdir %>"
 #
+<% if node[:ganglia][:option_write_rrds_supported]==true -%>
 #-------------------------------------------------------------------------------
 # Controls whether gmetad will write rrds to disk
 # default: on
 write_rrds <%= @write_rrds %>
+<% end %>
