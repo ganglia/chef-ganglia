@@ -10,15 +10,23 @@ when "ubuntu", "debian"
   end
 
 when "redhat", "centos", "fedora"
-  package "httpd"
-  package "php"
-  include_recipe "ganglia::source"
-  include_recipe "ganglia::gmetad"
+  case node['ganglia']['install_method']
+  when 'package'
+    include_recipe 'yum-epel'
+    package 'ganglia-web'
+  when 'source'
+    package "httpd"
+    package "php"
+    include_recipe "ganglia::source"
+    include_recipe "ganglia::gmetad"
 
-  execute "copy web directory" do
-    command "cp -r web /var/www/html/ganglia"
-    creates "/var/www/html/ganglia"
-    cwd "/usr/src/ganglia-#{node['ganglia']['version']}"
+    execute "copy web directory" do
+      command "cp -r web /var/www/html/ganglia"
+      creates "/var/www/html/ganglia"
+      cwd "/usr/src/ganglia-#{node['ganglia']['version']}"
+  end
+  else
+    fail "Unknown ganglia install method for #{node['platform']}: #{node['ganglia']['install_method']}"
   end
 end
 

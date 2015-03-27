@@ -21,16 +21,24 @@ case node['platform']
 when "ubuntu", "debian"
   package "ganglia-monitor"
 when "redhat", "centos", "fedora"
-  include_recipe "ganglia::source"
+  case node['ganglia']['install_method']
+  when 'package'
+    include_recipe 'yum-epel'
+    package 'ganglia-gmond'
+  when 'source'
+    include_recipe "ganglia::source"
 
-  execute "copy ganglia-monitor init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
+    execute "copy ganglia-monitor init script" do
+      command "cp " +
+        "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
       "/etc/init.d/ganglia-monitor"
-    not_if "test -f /etc/init.d/ganglia-monitor"
-  end
+      not_if "test -f /etc/init.d/ganglia-monitor"
+    end
 
-  user "ganglia"
+    user "ganglia"
+  else
+    fail "Unknown ganglia install method for #{node['platform']}: #{node['ganglia']['install_method']}"
+  end
 end
 
 directory "/etc/ganglia"

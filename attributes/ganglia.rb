@@ -2,6 +2,13 @@ default['ganglia']['version'] = "3.1.7"
 #default['ganglia']['uri'] = "http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz/download"
 default['ganglia']['uri'] = "http://downloads.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz"
 default['ganglia']['checksum'] = "bb1a4953"
+
+# For redhat, centos, fedora, install from source by default
+# if you set it to 'package' it will use EPEL
+# TODO: make install_method package by default?
+# TODO: install_method source should work on debian/ubuntu?
+default['ganglia']['install_method'] = 'source'
+
 default['ganglia']['grid_name'] = "default"
 default['ganglia']['unicast'] = false
 default['ganglia']['server_role'] = "ganglia"

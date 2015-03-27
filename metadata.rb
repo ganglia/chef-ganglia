@@ -14,5 +14,5 @@ end
 recommends "graphite"
 
 depends "iptables"
-
 depends "runit"
+depends "yum-epel"

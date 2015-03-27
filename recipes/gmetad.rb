@@ -2,12 +2,20 @@ case node['platform']
 when "ubuntu", "debian"
   package "gmetad"
 when "redhat", "centos", "fedora"
-  include_recipe "ganglia::source"
-  execute "copy gmetad init script" do
-    command "cp " +
-      "/usr/src/ganglia-#{node['ganglia']['version']}/gmetad/gmetad.init " +
+  case node['ganglia']['install_method']
+  when 'package'
+    include_recipe 'yum-epel'
+    package 'ganglia-gmetad'
+  when 'source'
+    include_recipe "ganglia::source"
+    execute "copy gmetad init script" do
+      command "cp " +
+        "/usr/src/ganglia-#{node['ganglia']['version']}/gmetad/gmetad.init " +
       "/etc/init.d/gmetad"
-    not_if "test -f /etc/init.d/gmetad"
+      not_if "test -f /etc/init.d/gmetad"
+    end
+  else
+    fail "Unknown ganglia install method for #{node['platform']}: #{node['ganglia']['install_method']}"
   end
 end
 
