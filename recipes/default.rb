@@ -26,13 +26,23 @@ when "redhat", "centos", "fedora"
     include_recipe 'yum-epel'
     package 'ganglia-gmond'
   when 'source'
+    # Migrate the ganglia-monitor service to gmond for old installs
+    old_init_script = '/etc/init.d/ganglia-monitor'
+    execute "#{old_init_script} stop" do
+      only_if { ::File.exist? old_init_script }
+    end
+
+    file old_init_script do
+      action :delete
+    end
+
     include_recipe "ganglia::source"
 
     execute "copy ganglia-monitor init script" do
       command "cp " +
         "/usr/src/ganglia-#{node['ganglia']['version']}/gmond/gmond.init " +
-      "/etc/init.d/ganglia-monitor"
-      not_if "test -f /etc/init.d/ganglia-monitor"
+      "/etc/init.d/gmond"
+      creates "/etc/init.d/gmond"
     end
 
     user "ganglia"
@@ -90,8 +100,12 @@ when false
 end
 
 service "ganglia-monitor" do
-  pattern "gmond"
-  provider Chef::Provider::Service::Upstart if (platform?('ubuntu') && node.platform_version.include?('14'))
+  if platform_family?('rhel')
+    service_name 'gmond'
+  else
+    pattern 'gmond'
+    provider Chef::Provider::Service::Upstart if (platform?('ubuntu') && node.platform_version.include?('14'))
+  end
   supports :restart => true
   action [ :enable, :start ]
 end
