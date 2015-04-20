@@ -21,6 +21,7 @@ case node['platform']
 when "ubuntu", "debian"
   package "ganglia-monitor"
 when "redhat", "centos", "fedora"
+  user "ganglia"
   case node['ganglia']['install_method']
   when 'package'
     include_recipe 'yum-epel'
@@ -44,8 +45,6 @@ when "redhat", "centos", "fedora"
       "/etc/init.d/gmond"
       creates "/etc/init.d/gmond"
     end
-
-    user "ganglia"
   else
     fail "Unknown ganglia install method for #{node['platform']}: #{node['ganglia']['install_method']}"
   end
