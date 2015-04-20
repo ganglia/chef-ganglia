@@ -69,8 +69,13 @@ end
 
 common_vars = {
   cluster_name: clusternames[0],
-  ports: ports
+  ports: ports,
+  globals: node['ganglia']['gmond']['globals'].to_hash,
 }
+
+if node['ganglia']['spoof_hostname']
+  common_vars[:globals][:override_hostname] = node[:hostname]
+end
 
 case node['ganglia']['unicast']
 when true
@@ -89,14 +94,13 @@ when true
     source "gmond_unicast.conf.erb"
     variables common_vars.merge(
                :gmond_collectors => gmond_collectors,
-               :spoof_hostname => node['ganglia']['spoof_hostname'],
-               :hostname => node.hostname )
+              )
     notifies :restart, "service[ganglia-monitor]"
   end
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables common_vars.merge({})
+    variables common_vars
     notifies :restart, "service[ganglia-monitor]"
   end
 end

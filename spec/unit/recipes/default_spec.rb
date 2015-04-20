@@ -32,7 +32,8 @@ describe 'ganglia::default' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
           :cluster_name => "default",
-          :ports => [18649]
+          :ports => [18649],
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -54,7 +55,8 @@ describe 'ganglia::default' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
           :cluster_name => "test",
-          :ports => [1234]
+          :ports => [1234],
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -99,8 +101,7 @@ udp_send_channel {
           :cluster_name=>"default",
           :gmond_collectors=>["127.0.0.1"],
           :ports=>[18649],
-          :spoof_hostname=>false,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -130,8 +131,7 @@ udp_send_channel {
           :cluster_name=>"default",
           :gmond_collectors=>["127.0.0.1"],
           :ports=>[18649],
-          :spoof_hostname=>true,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0, :override_hostname => "Fauxhai"},
         }
       )
     end
@@ -177,8 +177,7 @@ udp_send_channel {
           :cluster_name=>"default",
           :gmond_collectors=>["127.0.0.1"],
           :ports=>[18649, 1234],
-          :spoof_hostname=>false,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -208,8 +207,7 @@ udp_send_channel {
           :cluster_name=>"test",
           :gmond_collectors=>["ganglia.example.com"],
           :ports=>[1234],
-          :spoof_hostname=>false,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -233,8 +231,7 @@ udp_send_channel {
           :cluster_name=>"default",
           :gmond_collectors=>["127.0.0.1"],
           :ports=>[18649],
-          :spoof_hostname=>false,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
         }
       )
     end
@@ -288,8 +285,7 @@ udp_send_channel {
           :cluster_name=>"default",
           :gmond_collectors=>["host1", "host2"],
           :ports=>[18649],
-          :spoof_hostname=>false,
-          :hostname=>"Fauxhai"
+          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0}
         }
       )
     end

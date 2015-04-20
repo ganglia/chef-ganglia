@@ -14,6 +14,19 @@ default['ganglia']['unicast'] = false
 default['ganglia']['server_role'] = "ganglia"
 default['ganglia']['user'] = "nobody"
 default['ganglia']['rrd_rootdir'] = "/var/lib/ganglia/rrds"
+default['ganglia']['gmond']['globals'] = {
+  daemonize: 'yes',
+  setuid: 'yes',
+  user: 'ganglia',
+  debug_level: 0,
+  max_udp_msg_len: 1472,
+  mute: 'no',
+  deaf: 'no',
+  host_dmax: 0, # in secs
+  cleanup_threshold: 300, # in secs
+  gexec: 'no',
+  send_metadata_interval: 0, # in secs
+}
 default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil

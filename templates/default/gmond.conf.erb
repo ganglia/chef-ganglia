@@ -1,17 +1,9 @@
 /* This configuration is as close to 2.5.x default behavior as possible
    The values closely match ./gmond/metric.h definitions in 2.5.x */
 globals {
-  daemonize = yes
-  setuid = yes
-  user = ganglia
-  debug_level = 0
-  max_udp_msg_len = 1472
-  mute = no
-  deaf = no
-  host_dmax = 0 /*secs */
-  cleanup_threshold = 300 /*secs */
-  gexec = no
-  send_metadata_interval = 0
+<% @globals.each do |k,v| %>
+  <%= k %> = <%= v %>
+<% end %>
 }
 
 /* If a cluster attribute is specified, then all gmond hosts are wrapped inside
