@@ -67,6 +67,11 @@ if ports.empty?
   clusternames.push('default')
 end
 
+common_vars = {
+  cluster_name: clusternames[0],
+  ports: ports
+}
+
 case node['ganglia']['unicast']
 when true
   # fill in the gmond collectors by attribute if it exists, search if you find anything, or localhost.
@@ -82,9 +87,8 @@ when true
 
   template "/etc/ganglia/gmond.conf" do
     source "gmond_unicast.conf.erb"
-    variables( :cluster_name => clusternames[0],
+    variables common_vars.merge(
                :gmond_collectors => gmond_collectors,
-               :ports => ports,
                :spoof_hostname => node['ganglia']['spoof_hostname'],
                :hostname => node.hostname )
     notifies :restart, "service[ganglia-monitor]"
@@ -92,8 +96,7 @@ when true
 when false
   template "/etc/ganglia/gmond.conf" do
     source "gmond.conf.erb"
-    variables( :cluster_name => clusternames[0],
-               :ports => ports )
+    variables common_vars.merge({})
     notifies :restart, "service[ganglia-monitor]"
   end
 end
