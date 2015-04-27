@@ -31,9 +31,14 @@ describe 'ganglia::default' do
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name => "default",
-          :ports => [18649],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#18649"=>{"mcast_join"=>"239.2.11.71", "ttl"=>1, "port"=>18649},
+            "udp_recv_channel#18649"=>{"mcast_join"=>"239.2.11.71", "bind"=>"239.2.11.71", "port"=>18649}},
+          :ports=>[18649]
         }
       )
     end
@@ -54,9 +59,15 @@ describe 'ganglia::default' do
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name => "test",
-          :ports => [1234],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"test"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#1234"=>{"mcast_join"=>"239.2.11.71", "ttl"=>1, "port"=>1234},
+            "udp_recv_channel#1234"=>{"mcast_join"=>"239.2.11.71", "bind"=>"239.2.11.71", "port"=>1234}
+          },
+          :ports=>[1234]
         }
       )
     end
@@ -72,36 +83,43 @@ describe 'ganglia::default' do
     end
     let(:ganglia_conf_default_cluster) do
       %Q[cluster {
-  name = "default"
   owner = "unspecified"
   latlong = "unspecified"
   url = "unspecified"
+  name = "default"
 }]
     end
     let(:ganglia_conf_two_udp_stanzas) do
-      %Q[/* Feel free to specify as many udp_send_channels as you like.  Gmond
-   used to only support having a single channel */
-udp_send_channel {
-  host = 127.0.0.1
-  port = 18649
+      %Q[udp_send_channel {
   ttl = 1
+  port = 18649
+  host = "127.0.0.1"
 }
 
-/* always send to localhost */
+udp_recv_channel {
+  port = 18649
+}
+
 udp_send_channel {
-  host = 127.0.0.1
-  port = 8649
   ttl = 1
+  port = 8649
+  host = "127.0.0.1"
 }]
     end
 
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"default",
-          :gmond_collectors=>["127.0.0.1"],
-          :ports=>[18649],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#127.0.0.1_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"127.0.0.1"},
+            "udp_recv_channel#18649"=>{"port"=>18649},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}
+          },
+          :ports=>[18649]
         }
       )
     end
@@ -128,10 +146,16 @@ udp_send_channel {
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"default",
-          :gmond_collectors=>["127.0.0.1"],
-          :ports=>[18649],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0, :override_hostname => "Fauxhai"},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0, "override_hostname"=>"Fauxhai"},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#127.0.0.1_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"127.0.0.1"},
+            "udp_recv_channel#18649"=>{"port"=>18649},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}
+          },
+          :ports=>[18649]
         }
       )
     end
@@ -151,33 +175,47 @@ udp_send_channel {
       runner.converge(described_recipe)
     end
     let(:ganglia_conf_three_udp_stanzas) do
-      %Q[/* Feel free to specify as many udp_send_channels as you like.  Gmond
-   used to only support having a single channel */
-udp_send_channel {
-  host = 127.0.0.1
+      %Q[udp_send_channel {
+  ttl = 1
   port = 18649
-  ttl = 1
-}
-udp_send_channel {
-  host = 127.0.0.1
-  port = 1234
-  ttl = 1
+  host = "127.0.0.1"
 }
 
-/* always send to localhost */
+udp_recv_channel {
+  port = 18649
+}
+
 udp_send_channel {
-  host = 127.0.0.1
-  port = 8649
   ttl = 1
+  port = 1234
+  host = "127.0.0.1"
+}
+
+udp_recv_channel {
+  port = 1234
+}
+
+udp_send_channel {
+  ttl = 1
+  port = 8649
+  host = "127.0.0.1"
 }]
     end
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"default",
-          :gmond_collectors=>["127.0.0.1"],
-          :ports=>[18649, 1234],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#127.0.0.1_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"127.0.0.1"},
+            "udp_recv_channel#18649"=>{"port"=>18649},
+            "udp_send_channel#127.0.0.1_1234"=>{"ttl"=>1, "port"=>1234, "host"=>"127.0.0.1"},
+            "udp_recv_channel#1234"=>{"port"=>1234},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}
+          },
+          :ports=>[18649, 1234]
         }
       )
     end
@@ -204,10 +242,16 @@ udp_send_channel {
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"test",
-          :gmond_collectors=>["ganglia.example.com"],
-          :ports=>[1234],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"test"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#ganglia.example.com_1234"=>{"ttl"=>1, "port"=>1234, "host"=>"ganglia.example.com"},
+            "udp_recv_channel#1234"=>{"port"=>1234},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}
+          },
+          :ports=>[1234]
         }
       )
     end
@@ -228,10 +272,15 @@ udp_send_channel {
     it 'writes the gmond.conf, defaulting to the default cluster' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"default",
-          :gmond_collectors=>["127.0.0.1"],
-          :ports=>[18649],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0},
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#127.0.0.1_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"127.0.0.1"},
+            "udp_recv_channel#18649"=>{"port"=>18649},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}},
+          :ports=>[18649]
         }
       )
     end
@@ -259,33 +308,41 @@ udp_send_channel {
       stub_search(:node, 'role:ganglia AND chef_environment:_default').and_return(hosts)
     end
     let(:ganglia_conf_three_udp_stanzas) do
-      %Q[/* Feel free to specify as many udp_send_channels as you like.  Gmond
-   used to only support having a single channel */
-udp_send_channel {
-  host = host1
-  port = 18649
+      %Q[udp_send_channel {
   ttl = 1
-}
-udp_send_channel {
-  host = host2
   port = 18649
-  ttl = 1
+  host = "host1"
 }
 
-/* always send to localhost */
 udp_send_channel {
-  host = 127.0.0.1
-  port = 8649
   ttl = 1
+  port = 18649
+  host = "host2"
+}
+
+udp_recv_channel {
+  port = 18649
+}
+
+udp_send_channel {
+  ttl = 1
+  port = 8649
+  host = "127.0.0.1"
 }]
     end
     it 'writes the gmond.conf' do
       expect(chef_run).to create_template('/etc/ganglia/gmond.conf').with(
         variables: {
-          :cluster_name=>"default",
-          :gmond_collectors=>["host1", "host2"],
+          :sections=>{
+            "globals"=>{"daemonize"=>:yes, "setuid"=>:yes, "user"=>:ganglia, "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>:no, "deaf"=>:no, "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>:no, "send_metadata_interval"=>0},
+            "cluster"=>{"owner"=>"unspecified", "latlong"=>"unspecified", "url"=>"unspecified", "name"=>"default"},
+            "host"=>{"location"=>"unspecified"},
+            "tcp_accept_channel"=>{"port"=>8649},
+            "udp_send_channel#host1_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"host1"},
+            "udp_send_channel#host2_18649"=>{"ttl"=>1, "port"=>18649, "host"=>"host2"},
+            "udp_recv_channel#18649"=>{"port"=>18649},
+            "udp_send_channel#localhost_8649"=>{"ttl"=>1, "port"=>8649, "host"=>"127.0.0.1"}},
           :ports=>[18649],
-          :globals=>{"daemonize"=>"yes", "setuid"=>"yes", "user"=>"ganglia", "debug_level"=>0, "max_udp_msg_len"=>1472, "mute"=>"no", "deaf"=>"no", "host_dmax"=>0, "cleanup_threshold"=>300, "gexec"=>"no", "send_metadata_interval"=>0}
         }
       )
     end

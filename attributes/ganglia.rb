@@ -15,18 +15,39 @@ default['ganglia']['server_role'] = "ganglia"
 default['ganglia']['user'] = "nobody"
 default['ganglia']['rrd_rootdir'] = "/var/lib/ganglia/rrds"
 default['ganglia']['gmond']['globals'] = {
-  daemonize: 'yes',
-  setuid: 'yes',
-  user: 'ganglia',
+  daemonize: :yes,
+  setuid: :yes,
+  user: :ganglia,
   debug_level: 0,
   max_udp_msg_len: 1472,
-  mute: 'no',
-  deaf: 'no',
+  mute: :no,
+  deaf: :no,
   host_dmax: 0, # in secs
   cleanup_threshold: 300, # in secs
-  gexec: 'no',
+  gexec: :no,
   send_metadata_interval: 0, # in secs
 }
+default['ganglia']['gmond']['cluster'] = {
+  owner:   'unspecified',
+  latlong: 'unspecified',
+  url:     'unspecified',
+}
+default['ganglia']['gmond']['host'] = {
+  location: 'unspecified'
+}
+default['ganglia']['gmond']['tcp_accept_channel'] = { port: 8649 }
+default['ganglia']['gmond_default']['multicast_udp_send_channel'] = {
+  mcast_join: '239.2.11.71',
+  ttl:        1,
+}
+default['ganglia']['gmond_default']['multicast_udp_recv_channel'] = {
+  mcast_join: '239.2.11.71',
+  bind:       '239.2.11.71',
+}
+default['ganglia']['gmond_default']['unicast_udp_send_channel'] = {
+  ttl:        1,
+}
+
 default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
