@@ -19,6 +19,11 @@ when "redhat", "centos", "fedora"
   end
 end
 
+execute 'copy gmetad.conf' do
+  command 'cp /etc/ganglia/gmetad.conf /etc/ganglia/gmetad-example.conf'
+  creates '/etc/ganglia/gmetad-example.conf'
+end
+
 directory "/var/lib/ganglia/rrds" do
   owner node['ganglia']['user']
   recursive true
