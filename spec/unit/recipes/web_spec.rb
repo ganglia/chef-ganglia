@@ -36,9 +36,10 @@ describe 'ganglia::web' do
       runner = ChefSpec::Runner.new(
         platform: 'ubuntu',
         version: '12.04'
-      )
-      runner.node.set['ganglia']['web']['auth_system'] = 'enabled'
-      runner.node.set['ganglia']['ganglia_secret'] = '12345'
+      ) do |node|
+        node.set['ganglia']['web']['auth_system'] = 'enabled'
+        node.set['ganglia']['ganglia_secret'] = '12345'
+      end
       runner.converge(described_recipe)
     end
 
@@ -51,13 +52,14 @@ describe 'ganglia::web' do
     end
 
 	it 'creates a link to the apache auth conf' do
-	  	link = chef_run.link('/etc/apache2/sites-enabled/ganglia-auth')
-	  	expect(link).to link_to('/etc/ganglia-webfrontend/ganglia-auth.conf')
+      expect(chef_run).
+        to create_link('/etc/apache2/sites-enabled/ganglia-auth.conf').
+        with(to: '/etc/ganglia-webfrontend/ganglia-auth.conf')
 	end
 
     it 'link notifies apache service' do
-  		link = chef_run.link('/etc/apache2/sites-enabled/ganglia-auth')
-  		expect(link).to notify('service[apache2]').to(:restart)
+      link = chef_run.link('/etc/apache2/sites-enabled/ganglia-auth.conf')
+      expect(link).to notify('service[apache2]').to(:restart)
   	end
 
   	it 'creates htpasswd.users' do
