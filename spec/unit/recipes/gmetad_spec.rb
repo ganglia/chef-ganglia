@@ -48,10 +48,10 @@ describe 'ganglia::gmetad' do
           :clusters => {"default" => 18649},
           :hosts => ["host1", "host2"],
           :grid_name => "default",
-          :write_rrds=>"on",
-          :carbon_server=>nil,
-          :carbon_port=>nil,
-          :graphite_prefix=>nil,
+          :params => {
+            "xml_port"         => 8651,
+            "interactive_port" => 8652,
+          },
         }
       )
       expect(chef_run).to render_file("/etc/ganglia/gmetad.conf").with_content(
@@ -83,15 +83,12 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['host1', 'host2'],
-          :xml_port => 8651,
-          :interactive_port => 8652,
+          :params => {
+            "xml_port"         => 8651,
+            "interactive_port" => 8652,
+          },
           :rrd_rootdir => '/var/lib/ganglia/rrds',
-          :write_rrds => "on",
           :grid_name => 'default',
-          :write_rrds=>"on",
-          :carbon_server=>nil,
-          :carbon_port=>nil,
-          :graphite_prefix=>nil,
           })
     end
     it 'gmetad.conf notifies gmetad to restart' do
@@ -121,15 +118,12 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['127.0.0.1'],
-          :xml_port => 8651,
-          :interactive_port => 8652,
+          :params => {
+            "xml_port"         => 8651,
+            "interactive_port" => 8652,
+          },
           :rrd_rootdir => '/var/lib/ganglia/rrds',
-          :write_rrds => "on",
           :grid_name => 'default',
-          :write_rrds=>"on",
-          :carbon_server=>nil,
-          :carbon_port=>nil,
-          :graphite_prefix=>nil,
           })
     end
     it 'creates gmetad-norrds.conf template' do
@@ -137,10 +131,12 @@ describe 'ganglia::gmetad' do
         :variables => {
           :clusters => { 'default' => 18649 },
           :hosts => ['127.0.0.1'],
-          :xml_port => 8661,
-          :interactive_port => 8662,
+          :params => {
+            :xml_port         => 8661,
+            :interactive_port => 8662,
+            :write_rrds       => "off",
+          },
           :rrd_rootdir => '/var/lib/ganglia/empty-rrds-dir',
-          :write_rrds => "off",
           :grid_name => 'default',
           })
     end

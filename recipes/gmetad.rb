@@ -69,14 +69,10 @@ when true
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => gmond_collectors,
-               :xml_port => node['ganglia']['gmetad']['xml_port'],
-               :interactive_port => node['ganglia']['gmetad']['interactive_port'],
+               :grid_name => node['ganglia']['grid_name'],
+               :params => node['ganglia']['gmetad'].to_hash.reject {|k,v| v.nil? },
                :rrd_rootdir => node['ganglia']['rrd_rootdir'],
-               :write_rrds => node['ganglia']['gmetad']['write_rrds'],
-               :carbon_server => node['ganglia']['gmetad']['carbon_server'],
-               :carbon_port => node['ganglia']['gmetad']['carbon_port'],
-               :graphite_prefix => node['ganglia']['gmetad']['graphite_prefix'],
-               :grid_name => node['ganglia']['grid_name'])
+             )
     notifies :restart, "service[gmetad]"
   end
   if node['ganglia']['enable_two_gmetads']
@@ -84,10 +80,12 @@ when true
       source "gmetad.conf.erb"
       variables( :clusters => node['ganglia']['clusterport'].to_hash,
                  :hosts => gmond_collectors,
-                 :xml_port => node['ganglia']['two_gmetads']['xml_port'],
-                 :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
+                 :params => {
+                   :xml_port => node['ganglia']['two_gmetads']['xml_port'],
+                   :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
+                   :write_rrds => "off",
+                 },
                  :rrd_rootdir => node['ganglia']['two_gmetads']['empty_rrd_rootdir'],
-                 :write_rrds => "off",
                  :grid_name => node['ganglia']['grid_name'])
       notifies :restart, "service[gmetad-norrds]"
     end
@@ -101,10 +99,7 @@ when false
     source "gmetad.conf.erb"
     variables( :clusters => node['ganglia']['clusterport'].to_hash,
                :hosts => ips,
-               :write_rrds => node['ganglia']['gmetad']['write_rrds'],
-               :carbon_server => node['ganglia']['gmetad']['carbon_server'],
-               :carbon_port => node['ganglia']['gmetad']['carbon_port'],
-               :graphite_prefix => node['ganglia']['gmetad']['graphite_prefix'],
+               :params => node['ganglia']['gmetad'].to_hash.reject {|k,v| v.nil? },
                :grid_name => node['ganglia']['grid_name'])
     notifies :restart, "service[gmetad]"
   end
