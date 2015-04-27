@@ -67,6 +67,7 @@ tcp_accept_channel {
         cluster_list.each do |cluster, port|
           expect(chef_run).to render_file("/etc/init.d/ganglia-monitor-#{cluster}").with_content(
             %Q[NAME=gmond-#{cluster}
+PROC_NAME=gmond
 DESC="Ganglia Monitor Daemon"
 CONF=/etc/ganglia/gmond_collector_#{cluster}.conf
 ])
