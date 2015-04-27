@@ -77,6 +77,11 @@ if node['ganglia']['spoof_hostname']
   common_vars[:globals][:override_hostname] = node[:hostname]
 end
 
+execute 'copy gmond.conf' do
+  command 'cp /etc/ganglia/gmond.conf /etc/ganglia/gmond-example.conf'
+  creates '/etc/ganglia/gmond-example.conf'
+end
+
 case node['ganglia']['unicast']
 when true
   # fill in the gmond collectors by attribute if it exists, search if you find anything, or localhost.
