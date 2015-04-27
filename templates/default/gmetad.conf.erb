@@ -1,13 +1,9 @@
 # See gmetad-example.conf for detailed configuration file
 
-<%# the shuffle in @hosts.map balances load across the gmond collectors. %>
+<%# the shuffle on host balances load on gmonds %>
 <% require "digest/md5" %>
-<% @clusters.each do |cluster,port| %>
-data_source "<%= cluster %>" <%= @hosts.map do |host|
-    "#{host}:#{port}"
-  end.sort do |x,y|
-    Digest::MD5.hexdigest(node['hostname'] + x) <=> Digest::MD5.hexdigest(node['hostname'] + y)
-  end.join(' ') %>
+<% @clusters.each do |cluster,hosts| %>
+  data_source "<%= cluster %>" <%= hosts.sort_by { |x| Digest::MD5.hexdigest(node['hostname'] + x) }.join(' ') %>
 <% end %>
 
 <% @params.reject {|k,v| v.nil? }.each do |key,value|

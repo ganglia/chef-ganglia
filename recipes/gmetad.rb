@@ -65,10 +65,15 @@ when true
   if gmond_collectors.empty?
     gmond_collectors = ['127.0.0.1']
   end
+
+  clusters = node['ganglia']['clusterport'].to_hash.map do |cluster,port|
+    [cluster, gmond_collectors.map { |n| "#{n}:#{port}" }]
+  end
+  clusters = Hash[clusters]
+
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
-    variables( :clusters => node['ganglia']['clusterport'].to_hash,
-               :hosts => gmond_collectors,
+    variables( :clusters => clusters,
                :grid_name => node['ganglia']['grid_name'],
                :params => node['ganglia']['gmetad'].to_hash.reject {|k,v| v.nil? },
                :rrd_rootdir => node['ganglia']['rrd_rootdir'],
@@ -78,8 +83,7 @@ when true
   if node['ganglia']['enable_two_gmetads']
     template "/etc/ganglia/gmetad-norrds.conf" do
       source "gmetad.conf.erb"
-      variables( :clusters => node['ganglia']['clusterport'].to_hash,
-                 :hosts => gmond_collectors,
+      variables( :clusters => clusters,
                  :params => {
                    :xml_port => node['ganglia']['two_gmetads']['xml_port'],
                    :interactive_port => node['ganglia']['two_gmetads']['interactive_port'],
@@ -94,13 +98,21 @@ when true
     include_recipe "ganglia::iptables"
   end
 when false
-  ips = search(:node, "*:*").map {|node| node['ipaddress']}
+  clusters = node['ganglia']['clusterport'].to_hash.map do |cluster,port|
+    ips = search(:node, "ganglia_host_cluster_#{cluster}:1").map do |node|
+      "#{node['ipaddress']}:#{port}"
+    end
+    [cluster, ips]
+  end
+  clusters = Hash[clusters]
+
   template "/etc/ganglia/gmetad.conf" do
     source "gmetad.conf.erb"
-    variables( :clusters => node['ganglia']['clusterport'].to_hash,
-               :hosts => ips,
+    variables( :clusters => clusters,
                :params => node['ganglia']['gmetad'].to_hash.reject {|k,v| v.nil? },
-               :grid_name => node['ganglia']['grid_name'])
+               :grid_name => node['ganglia']['grid_name'],
+               :rrd_rootdir => node['ganglia']['rrd_rootdir'],
+             )
     notifies :restart, "service[gmetad]"
   end
 end
