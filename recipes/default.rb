@@ -67,18 +67,13 @@ if ports.empty?
   clusternames.push('default')
 end
 
-common_vars = {
-  cluster_name: clusternames[0],
-  ports: ports,
-  globals: node['ganglia']['gmond']['globals'].to_hash,
-}
 
-if node['ganglia']['spoof_hostname']
-  common_vars[:globals][:override_hostname] = node[:hostname]
+execute 'copy gmond.conf' do
+  command 'cp /etc/ganglia/gmond.conf /etc/ganglia/gmond-example.conf'
+  creates '/etc/ganglia/gmond-example.conf'
 end
 
-case node['ganglia']['unicast']
-when true
+if node['ganglia']['unicast']
   # fill in the gmond collectors by attribute if it exists, search if you find anything, or localhost.
   gmond_collectors = []
   if node['ganglia']['server_host']
@@ -90,19 +85,46 @@ when true
      gmond_collectors = ["127.0.0.1"]
   end
 
-  template "/etc/ganglia/gmond.conf" do
-    source "gmond_unicast.conf.erb"
-    variables common_vars.merge(
-               :gmond_collectors => gmond_collectors,
-              )
-    notifies :restart, "service[ganglia-monitor]"
+  ports.each do |port|
+    gmond_collectors.each do |collector|
+      send_conf = node['ganglia']['gmond_default']['unicast_udp_send_channel'].to_hash
+      send_conf.merge!({port: port, host: collector})
+      node.default['ganglia']['gmond']["udp_send_channel##{collector}_#{port}"] = send_conf
+    end
+    recv_conf = { port: port}
+    node.default['ganglia']['gmond']["udp_recv_channel##{port}"] = recv_conf
   end
-when false
-  template "/etc/ganglia/gmond.conf" do
-    source "gmond.conf.erb"
-    variables common_vars
-    notifies :restart, "service[ganglia-monitor]"
+
+  # always connect to localhost
+  node.default['ganglia']['gmond']['udp_send_channel#localhost_8649'] = { ttl: 1, port: 8649, host: '127.0.0.1' }
+
+else # multicast
+
+  ports.each do |port|
+    send_conf = node['ganglia']['gmond_default']['multicast_udp_send_channel'].to_hash
+    send_conf.merge!(port: port)
+    node.default['ganglia']['gmond']["udp_send_channel##{port}"] = send_conf
+    recv_conf = node['ganglia']['gmond_default']['multicast_udp_recv_channel'].to_hash
+    recv_conf.merge!(port: port)
+    node.default['ganglia']['gmond']["udp_recv_channel##{port}"] = recv_conf
   end
+end
+
+node.default['ganglia']['gmond']['cluster']['name'] = clusternames.first
+
+if node['ganglia']['spoof_hostname']
+  node.default['ganglia']['gmond']['globals']['override_hostname'] = node['hostname']
+end
+
+common_vars = {
+  sections: node['ganglia']['gmond'].to_hash,
+  ports: ports,
+}
+
+template "/etc/ganglia/gmond.conf" do
+  source "gmond.conf.erb"
+  variables common_vars
+  notifies :restart, "service[ganglia-monitor]"
 end
 
 service "ganglia-monitor" do

@@ -17,7 +17,7 @@ describe 'ganglia::gmetad' do
       end
       hosts << n
     end
-    stub_search(:node, '*:*').and_return(hosts)
+    stub_search(:node, 'ganglia_host_cluster_default:1').and_return(hosts)
   end
 
   it 'installs the gmetad package' do
@@ -45,9 +45,9 @@ describe 'ganglia::gmetad' do
     it 'creates gmetad.conf' do
       expect(chef_run).to create_template("/etc/ganglia/gmetad.conf").with(
         variables: {
-          :clusters => {"default" => 18649},
-          :hosts => ["host1", "host2"],
+          :clusters => {"default" => ["host1:18649", "host2:18649"]},
           :grid_name => "default",
+          :rrd_rootdir=>"/var/lib/ganglia/rrds",
           :params => {
             "xml_port"         => 8651,
             "interactive_port" => 8652,
@@ -81,8 +81,7 @@ describe 'ganglia::gmetad' do
     it 'creates gmetad.conf template' do
       expect(chef_run).to create_template('/etc/ganglia/gmetad.conf').with(
         :variables => {
-          :clusters => { 'default' => 18649 },
-          :hosts => ['host1', 'host2'],
+          :clusters => { "default" => ["host1:18649", "host2:18649"] },
           :params => {
             "xml_port"         => 8651,
             "interactive_port" => 8652,
@@ -116,8 +115,7 @@ describe 'ganglia::gmetad' do
     it 'creates gmetad.conf template' do
       expect(chef_run).to create_template('/etc/ganglia/gmetad.conf').with(
         :variables => {
-          :clusters => { 'default' => 18649 },
-          :hosts => ['127.0.0.1'],
+          :clusters=> { "default" => ["127.0.0.1:18649"] },
           :params => {
             "xml_port"         => 8651,
             "interactive_port" => 8652,
@@ -129,8 +127,7 @@ describe 'ganglia::gmetad' do
     it 'creates gmetad-norrds.conf template' do
       expect(chef_run).to create_template('/etc/ganglia/gmetad-norrds.conf').with(
         :variables => {
-          :clusters => { 'default' => 18649 },
-          :hosts => ['127.0.0.1'],
+          :clusters=> { "default" => ["127.0.0.1:18649"] },
           :params => {
             :xml_port         => 8661,
             :interactive_port => 8662,
