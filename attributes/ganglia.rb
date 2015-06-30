@@ -37,16 +37,16 @@ default['ganglia']['gmond']['cluster'] = {
   url:     'unspecified',
 }
 default['ganglia']['gmond']['host'] = {
-  location: '127.0.0.1'
+  location: 'unspecified'
 }
 default['ganglia']['gmond']['tcp_accept_channel'] = { port: 8649 }
 default['ganglia']['gmond_default']['multicast_udp_send_channel'] = {
- # mcast_join: '239.2.11.71',
+  mcast_join: '239.2.11.71',
   ttl:        1,
 }
 default['ganglia']['gmond_default']['multicast_udp_recv_channel'] = {
- # mcast_join: '239.2.11.71',
- # bind:       '239.2.11.71',
+  mcast_join: '239.2.11.71',
+  bind:       '239.2.11.71',
 }
 default['ganglia']['gmond_default']['unicast_udp_send_channel'] = {
   ttl:        1,
@@ -57,9 +57,9 @@ default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['gmetad']['all_trusted'] = nil
 default['ganglia']['gmetad']['write_rrds'] = nil # ganglia default is on
-default['ganglia']['gmetad']['carbon_server'] = '127.0.0.1'
-default['ganglia']['gmetad']['carbon_port'] = 2003
-default['ganglia']['gmetad']['graphite_prefix'] = 'test_graphite'
+default['ganglia']['gmetad']['carbon_server'] = nil
+default['ganglia']['gmetad']['carbon_port'] = nil
+default['ganglia']['gmetad']['graphite_prefix'] = nil
 default['ganglia']['spoof_hostname'] = false
 
 default['ganglia']['mod_path'] = '/usr/lib/ganglia/'
@@ -73,7 +73,7 @@ default['ganglia']['mod_path'] = '/usr/lib/ganglia/'
 # * don't use port 8649
 # * don't put spaces in cluster names
 default['ganglia']['clusterport'] = {
-                                    "default"       => 8649
+                                    "default"       => 18649
                                   }
 # this is set on the host to determine which cluster it should join
 # it's a hash with one key per cluster; it should join all clusters
