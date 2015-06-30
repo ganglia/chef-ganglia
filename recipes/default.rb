@@ -22,18 +22,22 @@ when "debian"
   package "ganglia-monitor"
 
 when "ubuntu"
-  # Install required packages if it has not been installed 
-  %w{libapr1 libconfuse0}.each do |package_name|
-    package "#{package_name}"
+  case node['platform_version']
+  when '12.04'
+    # Install required packages if it has not been installed     
+    %w{libapr1 libconfuse0}.each do |package_name|
+      package "#{package_name}"
+    end
+    # Download and install libganglia1, libganglia1-dev, ganglia-monitor
+    node['ganglia']['default_install'].each do |packet|
+      remote_file "/usr/src/#{packet}_#{node['ganglia']['ubuntu_version']}.deb" do
+        source "#{node['ganglia']['download_url']}/#{packet}_#{node['ganglia']['ubuntu_version']}.deb"
+      end 
+      dpkg_package "/usr/src/#{packet}_#{node['ganglia']['ubuntu_version']}.deb"
+    end
+  else 
+    package 'ganglia-monitor'
   end
-  # Download and install libganglia1, libganglia1-dev, ganglia-monitor
-  node['ganglia']['default_install'].each do |packet|
-    remote_file "/usr/src/#{packet}_#{node['ganglia']['ubuntu_version']}.deb" do
-      source "#{node['ganglia']['download_url']}/#{packet}_#{node['ganglia']['ubuntu_version']}.deb"
-    end 
-    dpkg_package "/usr/src/#{packet}_#{node['ganglia']['ubuntu_version']}.deb"
-  end
-
 when "redhat", "centos", "fedora"
   user "ganglia"
   case node['ganglia']['install_method']
