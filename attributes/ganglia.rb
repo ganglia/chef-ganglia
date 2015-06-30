@@ -1,4 +1,8 @@
 default['ganglia']['version'] = "3.1.7"
+default['ganglia']['ubuntu_version'] = '3.3.8-1+nmu1_amd64'
+default['ganglia']['download_url'] = 'http://ftp.us.debian.org/debian/pool/main/g/ganglia'
+default['ganglia']['default_install'] = ['libganglia1', 'libganglia1-dev', 'ganglia-monitor']
+default['ganglia']['gmetad_install'] = 'gmetad'
 #default['ganglia']['uri'] = "http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz/download"
 default['ganglia']['uri'] = "http://downloads.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz"
 default['ganglia']['checksum'] = "bb1a4953"
@@ -33,16 +37,16 @@ default['ganglia']['gmond']['cluster'] = {
   url:     'unspecified',
 }
 default['ganglia']['gmond']['host'] = {
-  location: 'unspecified'
+  location: '127.0.0.1'
 }
 default['ganglia']['gmond']['tcp_accept_channel'] = { port: 8649 }
 default['ganglia']['gmond_default']['multicast_udp_send_channel'] = {
-  mcast_join: '239.2.11.71',
+ # mcast_join: '239.2.11.71',
   ttl:        1,
 }
 default['ganglia']['gmond_default']['multicast_udp_recv_channel'] = {
-  mcast_join: '239.2.11.71',
-  bind:       '239.2.11.71',
+ # mcast_join: '239.2.11.71',
+ # bind:       '239.2.11.71',
 }
 default['ganglia']['gmond_default']['unicast_udp_send_channel'] = {
   ttl:        1,
@@ -53,12 +57,12 @@ default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil
 default['ganglia']['gmetad']['all_trusted'] = nil
 default['ganglia']['gmetad']['write_rrds'] = nil # ganglia default is on
-default['ganglia']['gmetad']['carbon_server'] = nil
-default['ganglia']['gmetad']['carbon_port'] = nil
-default['ganglia']['gmetad']['graphite_prefix'] = nil
+default['ganglia']['gmetad']['carbon_server'] = '127.0.0.1'
+default['ganglia']['gmetad']['carbon_port'] = 2003
+default['ganglia']['gmetad']['graphite_prefix'] = 'test_graphite'
 default['ganglia']['spoof_hostname'] = false
 
-default['ganglia']['mod_path'] = ''
+default['ganglia']['mod_path'] = '/usr/lib/ganglia/'
 
 # Uncomment this to override the search for server_role and just specify the host instead
 # default['ganglia']['server_host'] = 'ganglia.example.com'
@@ -69,7 +73,7 @@ default['ganglia']['mod_path'] = ''
 # * don't use port 8649
 # * don't put spaces in cluster names
 default['ganglia']['clusterport'] = {
-                                    "default"       => 18649
+                                    "default"       => 8649
                                   }
 # this is set on the host to determine which cluster it should join
 # it's a hash with one key per cluster; it should join all clusters

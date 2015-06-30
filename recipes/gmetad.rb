@@ -1,6 +1,13 @@
 case node['platform']
-when "ubuntu", "debian"
+when "debian"
   package "gmetad"
+when "ubuntu"
+  package "librrd-dev"
+  remote_file "/usr/src/#{node['ganglia']['gmetad_install']}_#{node['ganglia']['ubuntu_version']}.deb" do
+    source "#{node['ganglia']['download_url']}/#{node['ganglia']['gmetad_install']}_#{node['ganglia']['ubuntu_version']}.deb"
+  end
+  dpkg_package "/usr/src/#{node['ganglia']['gmetad_install']}_#{node['ganglia']['ubuntu_version']}.deb"
+ 
 when "redhat", "centos", "fedora"
   case node['ganglia']['install_method']
   when 'package'
