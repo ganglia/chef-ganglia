@@ -79,7 +79,7 @@ if node['ganglia']['unicast']
   if node['ganglia']['server_host']
     gmond_collectors = [node['ganglia']['server_host']]
   elsif gmond_collectors.empty?
-    gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
+    gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}.compact
   end rescue NoMethodError
   if not gmond_collectors.any?
      gmond_collectors = ["127.0.0.1"]
