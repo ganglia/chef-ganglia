@@ -3,7 +3,7 @@ include_recipe "iptables"
 iptables_rule "http"
 iptables_rule "https"
 
-workers = search(:node, "*:*")  || []
+workers = Chef::Config[:solo] ? [] : search(:node, "*:*")
 subnets = []
 
 workers.each do |w|
