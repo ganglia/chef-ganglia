@@ -48,6 +48,15 @@ default['ganglia']['gmond_default']['unicast_udp_send_channel'] = {
   ttl:        1,
 }
 
+# gmond_collector specifics
+default['ganglia']['gmond_collector'] = {
+  globals: {
+    mute: 'yes',
+    host_dmax: 600,
+    send_metadat_interval: 30,
+  }
+}
+
 default['ganglia']['gmetad']['xml_port'] = 8651
 default['ganglia']['gmetad']['interactive_port'] = 8652
 default['ganglia']['gmetad']['trusted_hosts'] = nil

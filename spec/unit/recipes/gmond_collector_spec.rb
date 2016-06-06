@@ -19,37 +19,28 @@ describe 'ganglia::gmond_collector' do
       end
       it "writes #{name} gmond.conf" do
         cluster_list.each do |cluster, port|
-          expect(chef_run).to create_template("/etc/ganglia/gmond_collector_#{cluster}.conf").with(
-            variables: {
-              :cluster_name => cluster,
-              :port => port
-            }
-          )
+          expect(chef_run).to create_template("/etc/ganglia/gmond_collector_#{cluster}.conf")
         end
       end
       it "renders gmond.conf with the right port" do
         cluster_list.each do |cluster, port|
           expect(chef_run).to render_file("/etc/ganglia/gmond_collector_#{cluster}.conf").with_content(
               %Q[cluster {
-  name = "#{cluster}"
   owner = "unspecified"
   latlong = "unspecified"
   url = "unspecified"
+  name = "#{cluster}"
 }
 
-/* The host section describes attributes of the host, like the location */
 host {
   location = "unspecified"
 }
 
-/* You can specify as many udp_recv_channels as you like as well. */
-udp_recv_channel {
+tcp_accept_channel {
   port = #{port}
 }
 
-/* You can specify as many tcp_accept_channels as you like to share
-   an xml description of the state of the cluster */
-tcp_accept_channel {
+udp_recv_channel {
   port = #{port}
 }])
         end
@@ -82,4 +73,3 @@ CONF=/etc/ganglia/gmond_collector_#{cluster}.conf
     end
   end
 end
-

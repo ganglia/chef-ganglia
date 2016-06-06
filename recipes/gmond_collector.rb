@@ -3,15 +3,23 @@
 ## start multiple copies of gmond, one for each cluster.
 ##
 
-# we need all the packgages installed and so on.  also, this node should have
-# its own ganglia client.
-include_recipe "ganglia::default"
+directory 'ganglia configuration file' do
+  path '/etc/ganglia'
+end
 
 node['ganglia']['clusterport'].each do |clust,port|
+
+  sections = node['ganglia']['gmond'].to_hash
+  sections = DeepMerge.merge(sections, node['ganglia']['gmond_collector'])
+  sections['cluster']['name'] = clust
+  sections['udp_recv_channel'] ||= {}
+  sections['udp_recv_channel']['port'] = port
+  sections['tcp_accept_channel'] ||= {}
+  sections['tcp_accept_channel']['port'] = port
+
   template "/etc/ganglia/gmond_collector_#{clust}.conf" do
     source "gmond_collector.conf.erb"
-    variables( :cluster_name => clust,
-               :port => port )
+    variables( :sections => sections )
     notifies :restart, "service[ganglia-monitor-#{clust}]"
   end
   template "/etc/init.d/ganglia-monitor-#{clust}" do
@@ -26,4 +34,8 @@ node['ganglia']['clusterport'].each do |clust,port|
     action [ :enable, :start ]
   end
 end
+
+# we need all the packgages installed and so on.  also, this node should have
+# its own ganglia client.
+include_recipe "ganglia::default"
 
