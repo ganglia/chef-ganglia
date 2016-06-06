@@ -10,9 +10,15 @@
 # Go through all nodes that have aggregated metrics and are in our environment.
 # For each node type that we haven't seen before (as judged by hostname minus digits)
 # add whatever metrics you find there into the cluster's list of metrics
+#
+if Chef::Config[:solo]
+  raise 'This recipe requires search. Chef Solo does not support search.'
+end
+
 metrics = {
 }
 seen = {}
+nodes = search(:node, "ganglia_aggregated_metrics:* AND chef_environment:#{node.chef_environment}")
 search(:node, "ganglia_aggregated_metrics:* AND chef_environment:#{node.chef_environment}").each do |server|
   cluster = (server.ganglia.host_cluster.keys.select {|x| server.ganglia.host_cluster[x] == 1})[0]
   aggregated_metrics = server.ganglia.aggregated_metrics

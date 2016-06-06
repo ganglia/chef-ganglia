@@ -61,7 +61,13 @@ end
 
 case node['ganglia']['unicast']
 when true
-  gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+    Chef::Log.warn('Defaulting to localhost collector.')
+    gmond_collectors = ['127.0.0.1']
+  else
+    gmond_collectors = search(:node, "role:#{node['ganglia']['server_role']} AND chef_environment:#{node.chef_environment}").map {|node| node['ipaddress']}
+  end
   if gmond_collectors.empty?
     gmond_collectors = ['127.0.0.1']
   end
@@ -98,6 +104,10 @@ when true
     include_recipe "ganglia::iptables"
   end
 when false
+  if Chef::Config[:solo]
+    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
+    raise 'ganglia clustering requires search.'
+  end
   clusters = node['ganglia']['clusterport'].to_hash.map do |cluster,port|
     ips = search(:node, "ganglia_host_cluster_#{cluster}:1").map do |node|
       "#{node['ipaddress']}:#{port}"
