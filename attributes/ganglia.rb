@@ -53,7 +53,7 @@ default['ganglia']['gmond_collector'] = {
   globals: {
     mute: 'yes',
     host_dmax: 600,
-    send_metadat_interval: 30,
+    send_metadata_interval: 30,
   }
 }
 
