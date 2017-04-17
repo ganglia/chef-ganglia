@@ -1,4 +1,8 @@
 default['ganglia']['version'] = "3.1.7"
+default['ganglia']['ubuntu_version'] = '3.3.8-1+nmu1_amd64'
+default['ganglia']['download_url'] = 'http://ftp.us.debian.org/debian/pool/main/g/ganglia'
+default['ganglia']['default_install'] = ['libganglia1', 'libganglia1-dev', 'ganglia-monitor']
+default['ganglia']['gmetad_install'] = 'gmetad'
 #default['ganglia']['uri'] = "http://sourceforge.net/projects/ganglia/files/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz/download"
 default['ganglia']['uri'] = "http://downloads.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/#{node['ganglia']['version']}/ganglia-#{node['ganglia']['version']}.tar.gz"
 default['ganglia']['checksum'] = "bb1a4953"
@@ -67,7 +71,7 @@ default['ganglia']['gmetad']['carbon_port'] = nil
 default['ganglia']['gmetad']['graphite_prefix'] = nil
 default['ganglia']['spoof_hostname'] = false
 
-default['ganglia']['mod_path'] = ''
+default['ganglia']['mod_path'] = '/usr/lib/ganglia/'
 
 # Uncomment this to override the search for server_role and just specify the host instead
 # default['ganglia']['server_host'] = 'ganglia.example.com'
