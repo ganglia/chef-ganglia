@@ -138,7 +138,7 @@ service "ganglia-monitor" do
     service_name 'gmond'
   else
     pattern 'gmond'
-    provider Chef::Provider::Service::Upstart if (platform?('ubuntu') && node.platform_version.include?('14'))
+    provider Chef::Provider::Service::Upstart if (platform?('ubuntu') && node['platform_version'].include?('14'))
   end
   supports :restart => true
   action [ :enable, :start ]
