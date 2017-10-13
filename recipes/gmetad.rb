@@ -1,6 +1,14 @@
+service "gmetad" do
+  supports :restart => true, :start => true, :stop => true, :reload => true
+  action :nothing
+end
+
 case node['platform']
 when "ubuntu", "debian"
-  package "gmetad"
+  package "gmetad" do
+      action :install
+      notifies :stop, "service[gmetad]", :immediately
+  end
 when "redhat", "centos", "fedora"
   case node['ganglia']['install_method']
   when 'package'
@@ -138,7 +146,6 @@ if node['ganglia']['enable_rrdcached'] == true
 end
 
 service "gmetad" do
-  supports :restart => true
   action [ :enable, :start ]
 end
 
