@@ -115,3 +115,7 @@ default['ganglia']['enable_two_gmetads'] = false
 default['ganglia']['two_gmetads']['xml_port'] = 8661
 default['ganglia']['two_gmetads']['interactive_port'] = 8662
 default['ganglia']['two_gmetads']['empty_rrd_rootdir'] = "/var/lib/ganglia/empty-rrds-dir"
+
+# This gmetad config option has been introduced with monitor-core >= 3.3.8
+# See: https://github.com/ganglia/monitor-core/commit/5bc1c1da63495712805108f55c6824bfa0317d45
+default['ganglia']['option_write_rrds_supported'] = false
